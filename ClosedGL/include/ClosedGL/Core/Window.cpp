@@ -13,7 +13,6 @@ Window::Window(IEventHandler* eventHandler, const WindowProps& props): mEventHan
 
 Window::~Window() {
 	glfwDestroyWindow(window);
-	delete mEventHandler;
 }
 
 void Window::init() {
