@@ -13,28 +13,52 @@ set(STATICLIB "ClosedGLStatic")
 
 project(${PROJECT_NAME})
 
-
 find_package(spdlog REQUIRED)
 find_package(glad REQUIRED)
 find_package(glfw3 REQUIRED)
 find_package(glm REQUIRED)
 find_package(imgui REQUIRED)
 find_package(EnTT REQUIRED)
-#find_package(stb REQUIRED)
+find_package(stb REQUIRED)
+
+include_directories("${CMAKE_SOURCE_DIR}/vendor/Physiks/include")
 
 include_directories(
     "${PROJECT_SOURCE_DIR}/include"
     "${PROJECT_SOURCE_DIR}/include/ClosedGL"
+    "${PROJECT_SOURCE_DIR}/include/ClosedGL/Core"
+    "${PROJECT_SOURCE_DIR}/include/ClosedGL/Core/backends"
+    "${PROJECT_SOURCE_DIR}/include/ClosedGL/Events"
+    "${PROJECT_SOURCE_DIR}/include/ClosedGL/Layers"
+    "${PROJECT_SOURCE_DIR}/include/ClosedGL/Renderer"
+    "${PROJECT_SOURCE_DIR}/include/ClosedGL/Scene"
+    "${PROJECT_SOURCE_DIR}/include/ClosedGL/Utils"
 )
 
 set(SOURCES
-	"include/main.cpp"
+	
+	"include/pch.cpp"
+
+	"include/ClosedGL/Core/Application.cpp"
+	"include/ClosedGL/Core/Log.cpp"
+	"include/ClosedGL/Core/OrthographicCamera.cpp"
+	"include/ClosedGL/Core/PerspectiveCamera.cpp"
+	"include/ClosedGL/Core/Window.cpp"
+
+	"include/ClosedGL/Core/backends/imgui_impl_glfw.cpp"
+	"include/ClosedGL/Core/backends/imgui_impl_opengl3.cpp"
+		
+	"include/ClosedGL/Layers/ImGuiLayer.cpp"
+	"include/ClosedGL/Layers/LayerStack.cpp"
+
+	"include/ClosedGL/Renderer/Buffer.cpp"
+	"include/ClosedGL/Renderer/Renderer2D.cpp"
+	"include/ClosedGL/Renderer/Shader.cpp"
+	"include/ClosedGL/Renderer/Texture.cpp"
+
+	"include/ClosedGL/Scene/Scene.cpp"
+
 )	
-
-set(HEADERS
-
-)	
-
 
 add_library(${STATICLIB} STATIC ${SOURCES})
 
@@ -45,8 +69,9 @@ target_link_libraries(${STATICLIB} PUBLIC glm::glm)
 target_link_libraries(${STATICLIB} PUBLIC imgui::imgui)
 target_link_libraries(${STATICLIB} PUBLIC EnTT::EnTT)
 target_link_libraries(${STATICLIB} PRIVATE ${Stb_INCLUDE_DIR})
+target_link_libraries(${STATICLIB} PRIVATE PhysiksStatic)
 
-add_executable(${PROJECT_NAME} ${HEADERS} ${SOURCES})
+add_executable(${PROJECT_NAME} ${SOURCES})
 target_link_libraries(${PROJECT_NAME} PUBLIC ${STATICLIB})
 
 

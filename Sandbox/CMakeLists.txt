@@ -10,18 +10,14 @@ set(PROJECT_NAME "Sandbox")
 project(${PROJECT_NAME})
 
 set(SOURCES
-	main.cpp
+	"Sandbox.cpp"
 )
 
 include_directories("${CMAKE_SOURCE_DIR}/ClosedGL/include")
 
 
-
-#find_library(CLOSEDGL_CORE_LIB NAMES ClosedGLStatic PATHS ${CMAKE_LIBRARY_OUTPUT_DIRECTORY})
-
 add_executable(${PROJECT_NAME} ${SOURCES})
 target_link_libraries(${PROJECT_NAME} PUBLIC ClosedGLStatic)
-#target_link_libraries(${PROJECT_NAME} PUBLIC ${CLOSEDGL_CORE_LIB})
 
 if (CMAKE_VERSION VERSION_GREATER 3.12)
   set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 20)
