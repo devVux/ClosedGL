@@ -16,7 +16,7 @@ class Application: public EventListener {
 
 		Application(AWindow* window);
 		virtual ~Application() {
-			
+			delete pWindow;
 		}
 
 		void init();

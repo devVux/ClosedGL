@@ -14,9 +14,9 @@ int main() {
 		eventHandler.run();
 	});
 
-	GLFWWindow window(&eventHandler);
+	GLFWWindow* window = new GLFWWindow(&eventHandler);
 
-	auto app = ClosedGL::create(&window);
+	auto app = ClosedGL::create(window);
 	eventHandler.registerListener(app);
 	app->init();
 
