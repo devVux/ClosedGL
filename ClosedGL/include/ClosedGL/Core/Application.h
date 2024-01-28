@@ -26,7 +26,6 @@ class Application: public EventListener {
 		void onEvent(Event& e) override;
 		
 
-		AWindow* window() const { return pWindow; }
 		void* nativeWindow() const { return pWindow->native(); }
 
 	private:
