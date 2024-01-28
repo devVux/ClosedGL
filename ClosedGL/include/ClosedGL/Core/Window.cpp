@@ -7,15 +7,15 @@
 #include "ClosedGL/Events/KeyEvents.h"
 #include "ClosedGL/Events/MouseEvents.h"
 
-Window::Window(IEventHandler* eventHandler, const WindowProps& props): mEventHandler(eventHandler), mProps(props), window(nullptr) {
+GLFWWindow::GLFWWindow(IEventHandler* eventHandler, const WindowProps& props): AWindow(eventHandler, props) {
 	
 }
 
-Window::~Window() {
-	glfwDestroyWindow(window);
+GLFWWindow::~GLFWWindow() {
+	glfwDestroyWindow(pWindow);
 }
 
-void Window::init() {
+void GLFWWindow::init() {
 
 	int success = glfwInit();
 	assert(success != 0);
@@ -26,8 +26,8 @@ void Window::init() {
 
 
 
-	window = glfwCreateWindow(mProps.width, mProps.height, mProps.title.c_str(), nullptr, nullptr);
-	glfwMakeContextCurrent(window);
+	pWindow = glfwCreateWindow(mProps.width, mProps.height, mProps.title.c_str(), nullptr, nullptr);
+	glfwMakeContextCurrent(pWindow);
 
 	//success = gladLoadGLLoader((GLADloadproc) glfwGetProcAddress);
 	success = gladLoadGL();
@@ -41,16 +41,22 @@ void Window::init() {
 		//ERRORE("{}: {}", error, description);
 	});
 
-	glfwSetWindowUserPointer(window, (void*) mEventHandler);
+	glfwSetWindowUserPointer(pWindow, (void*) pEventHandler);
 
-	glfwSetWindowCloseCallback(window, [](GLFWwindow* window) {
+	glfwSetWindowCloseCallback(pWindow, [](GLFWwindow* window) {
 		
 		const auto& eventHandler = (IEventHandler*) glfwGetWindowUserPointer(window);
 		eventHandler->push(new WindowCloseEvent);
 
 	});
 
-	glfwSetKeyCallback(window, [](GLFWwindow* window, int keyCode, int scancode, int action, int mode) {
+	glfwSetWindowSizeCallback(pWindow, [](GLFWwindow* window, int w, int h) {
+		//const auto& eventHandler = (IEventHandler*) glfwGetWindowUserPointer(window);
+		//	eventHandler->push(new WindowResizeEvent(w, h));
+		glViewport(0, 0, w, h);
+	});
+
+	glfwSetKeyCallback(pWindow, [](GLFWwindow* window, int keyCode, int scancode, int action, int mode) {
 		
 		const auto& eventHandler = (IEventHandler*) glfwGetWindowUserPointer(window);
 
@@ -75,13 +81,7 @@ void Window::init() {
 
 	});
 
-	glfwSetWindowSizeCallback(window, [](GLFWwindow* window, int w, int h) {
-		//const auto& eventHandler = (IEventHandler*) glfwGetWindowUserPointer(window);
-		//	eventHandler->push(new WindowResizeEvent(w, h));
-		glViewport(0, 0, w, h);
-	});
-
-	glfwSetMouseButtonCallback(window, [](GLFWwindow* window, int button, int action, int mods) {
+	glfwSetMouseButtonCallback(pWindow, [](GLFWwindow* window, int button, int action, int mods) {
 
 		const auto& eventHandler = (IEventHandler*) glfwGetWindowUserPointer(window);
 
@@ -98,14 +98,14 @@ void Window::init() {
 		}
 	});
 
-	glfwSetCursorPosCallback(window, [](GLFWwindow* window, double x, double y) {
+	glfwSetCursorPosCallback(pWindow, [](GLFWwindow* window, double x, double y) {
 
 		const auto& eventHandler = (IEventHandler*) glfwGetWindowUserPointer(window);
 		eventHandler->push(new MouseMovedEvent({ (float) x, (float) y}));
 
 	});
 
-	glfwSetScrollCallback(window, [](GLFWwindow* window, double xOffset, double yOffset) {
+	glfwSetScrollCallback(pWindow, [](GLFWwindow* window, double xOffset, double yOffset) {
 
 		const auto& eventHandler = (IEventHandler*) glfwGetWindowUserPointer(window);
 		eventHandler->push(new MouseScrolledEvent((float) xOffset, (float) yOffset));
@@ -114,9 +114,9 @@ void Window::init() {
 
 }
 
-void Window::update() {
+void GLFWWindow::update() {
 		
 	glfwPollEvents();
-	glfwSwapBuffers(window);
+	glfwSwapBuffers(pWindow);
 
 }
