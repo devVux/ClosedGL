@@ -22,7 +22,7 @@ class Sandbox: public Application {
 
 	public:
 
-		Sandbox(IEventHandler* eventHandler): Application(eventHandler) {
+		Sandbox(AWindow* window): Application(window) {
 
 			auto e = mScene.createEntity();
 			actor = mWorld.createBody();
@@ -93,6 +93,6 @@ class Sandbox: public Application {
 
 };
 
-Application* ClosedGL::create(IEventHandler* eventHandler) {
-	return new Sandbox(eventHandler);
+Application* ClosedGL::create(AWindow* window) {
+	return new Sandbox(window);
 }

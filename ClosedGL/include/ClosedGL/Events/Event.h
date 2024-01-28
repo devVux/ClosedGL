@@ -109,7 +109,8 @@ class EventHandler: public IEventHandler {
 		}
 
 		void run() {
-			while (true) {
+			mRunning = true;
+			while (mRunning) {
 				mMutex.lock();
 
 				if (!mEventQueue.empty()) {
@@ -123,6 +124,10 @@ class EventHandler: public IEventHandler {
 				mMutex.unlock();
 				//std::this_thread::sleep_for(std::chrono::milliseconds(50));
 			}
+		}
+		void stop() {
+			std::lock_guard<std::mutex> lock(mMutex);
+			mRunning = false;
 		}
 
 		void push(Event* e) {
@@ -140,5 +145,7 @@ class EventHandler: public IEventHandler {
 		std::vector<EventListener*> mListeners;
 
 		mutable std::mutex mMutex;
+
+		bool mRunning;
 
 };

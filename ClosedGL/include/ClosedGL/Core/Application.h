@@ -14,7 +14,7 @@ class Application: public EventListener {
 
 		static Application& instance() { return *sInstance; }
 
-		Application(IEventHandler* eventHandler);
+		Application(AWindow* window);
 		virtual ~Application() {
 			delete pWindow;
 		}
@@ -26,11 +26,11 @@ class Application: public EventListener {
 		void onEvent(Event& e) override;
 		
 
-		Window* window() const { return pWindow; }
+		void* nativeWindow() const { return pWindow->native(); }
 
 	private:
 
-		Window* pWindow;
+		AWindow* pWindow;
 		EventDispatcher mDispatcher;
 
 		// layer stack will call delete
@@ -53,6 +53,6 @@ class Application: public EventListener {
 
 namespace ClosedGL {
 	
-	extern Application* create(IEventHandler* eventHandler);
+	extern Application* create(AWindow* window);
 
 }

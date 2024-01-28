@@ -17,7 +17,7 @@ static void MessageCallback(GLenum source, GLenum type, GLuint id, GLenum severi
 
 Application* Application::sInstance = nullptr;
 
-Application::Application(IEventHandler* eventHandler): pWindow(new Window(eventHandler)), pImGuiLayer(new ImGuiLayer), pStatsLayer(new StatsLayer) {
+Application::Application(AWindow* window): pWindow(window), pImGuiLayer(new ImGuiLayer), pStatsLayer(new StatsLayer) {
 
 	sInstance = this;
 	

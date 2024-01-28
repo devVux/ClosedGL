@@ -3,7 +3,7 @@
 #include <thread>
 #include "ClosedGL/Core/Application.h"
 
-extern Application* ClosedGL::create(IEventHandler* eventHandler);
+extern Application* ClosedGL::create(AWindow* window);
 
 int main() {
 
@@ -14,15 +14,18 @@ int main() {
 		eventHandler.run();
 	});
 
-	auto app = ClosedGL::create(&eventHandler);
+	GLFWWindow* window = new GLFWWindow(&eventHandler);
+
+	auto app = ClosedGL::create(window);
 	eventHandler.registerListener(app);
 	app->init();
 
 	app->run();
 
-	delete app;
-	
+	eventHandler.stop();
 	t.detach();
+	
+	delete app;
 
 	return 0;
 }

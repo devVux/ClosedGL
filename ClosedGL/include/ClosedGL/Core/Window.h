@@ -4,38 +4,52 @@
 
 struct GLFWwindow;
 
+
 struct WindowProps {
 	unsigned int width;
 	unsigned int height;
 	std::string title;
+};
 
-	WindowProps(unsigned int w, unsigned int h, std::string t):
-		width(w), height(h), title(t) {}
+class AWindow {
+
+	public:
+
+		AWindow(IEventHandler* eventHandler, const WindowProps& props): pEventHandler(eventHandler), mProps(props) { }
+		virtual ~AWindow() = default;
+
+		virtual void init() = 0;
+		virtual void update() = 0;
+		
+		virtual void* native() const = 0;
+
+		WindowProps properties() const { return mProps; };
+
+
+	protected:
+
+		IEventHandler* pEventHandler { nullptr };
+		WindowProps mProps;
 
 };
 
-class Window {
+
+class GLFWWindow: public AWindow {
 
 	public:
 		
-		Window(IEventHandler* eventHandler, const WindowProps& props = WindowProps(1280, 720, "Test"));
-		~Window();
+		GLFWWindow(IEventHandler* eventHandler, const WindowProps& props = { 1280, 720, "Test" });
+		~GLFWWindow();
 
-		void init();
-		
-		void update();
+		virtual void init() override;
+		virtual void update() override;
 
-		WindowProps properties() const { return mProps; }
-		void* nativeWindow() const { return window; }
+		virtual void* native() const { return pWindow; }
 
 	private:
 
-		IEventHandler* mEventHandler;
-
-		GLFWwindow* window;
-
-		WindowProps mProps;
-
 		EventDispatcher mDispatcher;
+
+		GLFWwindow* pWindow { nullptr };
 
 };
