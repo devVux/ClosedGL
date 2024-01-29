@@ -1,7 +1,5 @@
 #pragma once
 
-#define NATIVE_WINDOW static_cast<GLFWwindow*>(Application::instance().nativeWindow())
-
 struct MouseCoord {
 	float x;
 	float y;

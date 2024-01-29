@@ -70,13 +70,13 @@ class Sandbox: public Application {
 			static float speed = 10.0f;
 			float x = 0, y = 0;
 
-			if (Input::isKeyDown(CGL::KEY_W))
+			if (Input::isKeyDown(Keys::W))
 					y += speed;
-			if (Input::isKeyDown(CGL::KEY_S))
+			if (Input::isKeyDown(Keys::S))
 					y += -speed;
-			if (Input::isKeyDown(CGL::KEY_A))
+			if (Input::isKeyDown(Keys::A))
 					x += -speed;
-			if (Input::isKeyDown(CGL::KEY_D))
+			if (Input::isKeyDown(Keys::D))
 					x += speed;
 
 			actor->setVelocity({ x, y });

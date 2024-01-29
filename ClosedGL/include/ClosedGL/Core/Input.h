@@ -2,23 +2,67 @@
 
 #include <GLFW/glfw3.h>
 
-#include "ClosedGL/Utils/Utils.h"
-#include "Application.h"
+#include "ClosedGL/Events/KeyEvents.h"
+#include "ClosedGL/Events/MouseEvents.h"
 
-namespace Input {
+class GLFWWindow;
 
-	static bool isKeyDown(int keyCode) {
-		return glfwGetKey(NATIVE_WINDOW, keyCode) == GLFW_PRESS;
-	}
+class IInput {
 
-	static bool isMouseButtonDown(int button) {
-		return glfwGetMouseButton(NATIVE_WINDOW, button) == GLFW_PRESS;
-	}
+	public:
 
-	static MouseCoord mousePos() {
-		double x, y;
-		glfwGetCursorPos(NATIVE_WINDOW, &x, &y);
-		return MouseCoord{ static_cast<float>(x), static_cast<float>(y) };
-	}
+		virtual bool isKeyDown(Keys keyCode) const = 0;
+		virtual bool isMouseButtonDown(MouseButtons button) const = 0;
+		virtual MouseCoord mousePos() const = 0;
 
-}
+};
+
+
+class Input {
+
+	public:
+
+		static bool isKeyDown(Keys keyCode) {
+			return pInput->isKeyDown(keyCode);
+		}
+
+		static bool isMouseButtonDown(MouseButtons button) {
+			return pInput->isMouseButtonDown(button);
+		}
+
+		static MouseCoord mousePos() {
+			return pInput->mousePos();
+		}
+
+		static void setInputMode(IInput* input) {
+			if (input != nullptr)
+				pInput = input;
+		}
+
+	private:
+
+		static IInput* pInput;
+
+};
+
+
+
+
+
+class GLFWInput: public IInput {
+
+	public:
+
+		GLFWInput(GLFWWindow* window);
+
+		virtual bool isKeyDown(Keys keyCode) const;
+
+		virtual bool isMouseButtonDown(MouseButtons button) const;
+
+		virtual MouseCoord mousePos() const;
+
+	private:
+
+		GLFWWindow* pWindow;
+
+};

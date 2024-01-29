@@ -44,6 +44,7 @@ set(SOURCES
 	"include/ClosedGL/Core/OrthographicCamera.cpp"
 	"include/ClosedGL/Core/PerspectiveCamera.cpp"
 	"include/ClosedGL/Core/Window.cpp"
+	"include/ClosedGL/Core/Input.cpp"
 
 	"include/ClosedGL/Core/backends/imgui_impl_glfw.cpp"
 	"include/ClosedGL/Core/backends/imgui_impl_opengl3.cpp"
