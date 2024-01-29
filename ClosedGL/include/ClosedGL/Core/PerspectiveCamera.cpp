@@ -14,19 +14,19 @@ PerspectiveCamera::PerspectiveCamera(const glm::vec3& position, const glm::vec3&
 void PerspectiveCamera::update(Timestep ts) {
 
 	{
-		if (Input::isKeyDown(GLFW_KEY_W))
+		if (Input::isKeyDown(Keys::W))
 			mView = glm::translate(mView, glm::vec3(0, 0, mSpeed * ts));
-		if (Input::isKeyDown(GLFW_KEY_S))
+		if (Input::isKeyDown(Keys::S))
 			mView = glm::translate(mView, glm::vec3(0, 0, -mSpeed * ts));
 
-		if (Input::isKeyDown(GLFW_KEY_A))
+		if (Input::isKeyDown(Keys::A))
 			mView = glm::translate(mView, glm::vec3(mSpeed * ts, 0, 0));
-		if (Input::isKeyDown(GLFW_KEY_D))
+		if (Input::isKeyDown(Keys::D))
 			mView = glm::translate(mView, glm::vec3(-mSpeed * ts, 0, 0));
 
-		if (Input::isKeyDown(GLFW_KEY_Q))
+		if (Input::isKeyDown(Keys::Q))
 			mView = glm::rotate(mView, mSpeed * ts, glm::vec3(0, mSpeed * ts, 0));
-		if (Input::isKeyDown(GLFW_KEY_E))
+		if (Input::isKeyDown(Keys::E))
 			mView = glm::rotate(mView, mSpeed * ts, glm::vec3(0, -mSpeed * ts, 0));
 	}
 

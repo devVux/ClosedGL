@@ -17,7 +17,7 @@ void ImGuiLayer::attach() {
 	//io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 	ImGui::StyleColorsDark();
 
-	ImGui_ImplGlfw_InitForOpenGL(NATIVE_WINDOW, true);
+	ImGui_ImplGlfw_InitForOpenGL(static_cast<GLFWwindow*>(Application::instance().nativeWindow()), true);
 	ImGui_ImplOpenGL3_Init("#version 410 core");
 
 }

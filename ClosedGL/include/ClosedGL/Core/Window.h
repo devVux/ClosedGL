@@ -41,10 +41,10 @@ class GLFWWindow: public AWindow {
 		GLFWWindow(IEventHandler* eventHandler, const WindowProps& props = { 1280, 720, "Test" });
 		~GLFWWindow();
 
-		virtual void init() override;
-		virtual void update() override;
+		virtual void init() final override;
+		virtual void update()  override;
 
-		virtual void* native() const { return pWindow; }
+		virtual void* native() const override final { return pWindow; }
 
 	private:
 
