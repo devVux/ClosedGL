@@ -6,12 +6,14 @@
 #include "ClosedGL/Core/Actor.h"
 
 #include "ClosedGL/Renderer/Batch.h"
-#include "ClosedGL/Core/PerspectiveCamera.h"
-#include "ClosedGL/Core/OrthographicCamera.h"
+#include "ClosedGL/Scene/PerspectiveCamera.h"
+#include "ClosedGL/Scene/OrthographicCamera.h"
 
 #include "Texture.h"
 
 #include <array>
+
+#include "ClosedGL/Layers/StatsLayer.h"
 
 class Renderer {
 	
@@ -39,8 +41,6 @@ class Renderer {
 
 		void draw(const VertexArray& vertexArray);
 
-		const Stats& stats() const { return mStats; }
-
 	private:
 
 		size_t assignTextureSlot(const Texture& texture);
@@ -58,7 +58,5 @@ class Renderer {
 		std::array<const Texture*, 32> mTextureSlots { nullptr };
 
 		Batch mBatch;
-
-		Stats mStats;
 
 };

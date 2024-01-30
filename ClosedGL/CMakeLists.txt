@@ -41,16 +41,19 @@ set(SOURCES
 
 	"include/ClosedGL/Core/Application.cpp"
 	"include/ClosedGL/Core/Log.cpp"
-	"include/ClosedGL/Core/OrthographicCamera.cpp"
-	"include/ClosedGL/Core/PerspectiveCamera.cpp"
+
 	"include/ClosedGL/Core/Window.cpp"
 	"include/ClosedGL/Core/Input.cpp"
 
 	"include/ClosedGL/Core/backends/imgui_impl_glfw.cpp"
 	"include/ClosedGL/Core/backends/imgui_impl_opengl3.cpp"
 		
-	"include/ClosedGL/Layers/ImGuiLayer.cpp"
 	"include/ClosedGL/Layers/LayerStack.cpp"
+	"include/ClosedGL/Layers/StatsLayer.cpp"
+
+	"include/ClosedGL/Layers/ImGuiController.cpp"
+	"include/ClosedGL/Layers/View.cpp"
+	"include/ClosedGL/Layers/Controller.cpp"
 
 	"include/ClosedGL/Renderer/Buffer.cpp"
 	"include/ClosedGL/Renderer/Renderer2D.cpp"
@@ -58,6 +61,9 @@ set(SOURCES
 	"include/ClosedGL/Renderer/Texture.cpp"
 
 	"include/ClosedGL/Scene/Scene.cpp"
+	"include/ClosedGL/Scene/OrthographicCamera.cpp"
+	"include/ClosedGL/Scene/PerspectiveCamera.cpp"
+
 
 )	
 

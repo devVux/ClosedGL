@@ -1,20 +1,23 @@
 #pragma once
 
-#include "ClosedGL/Renderer/Batch.h"
+
 #include "ClosedGL/Layers/Layer.h"
+#include "ClosedGL/Core/Timestep.h"
+#include "ClosedGL/Utils/Observer.h"
 
 #include "imgui.h"
 #include "imgui_internal.h"
 
-class StatsLayer: public Layer {
+class StatsLayer: public Layer, public Subject {
 
 	public:
-		
-		void update(const Stats& stats) {
 
-			ImGui::Text("%hu", stats.drawCalls);
-			ImGui::Text("%hu", stats.fps);
+		void update(Timestep ts);
 
+		virtual void notify() override {
+			std::for_each(std::begin(mObservers), std::end(mObservers), [](Observer* observer) {
+				observer->update();
+			});
 		}
 
 };	 

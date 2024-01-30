@@ -1,7 +1,7 @@
 #pragma once
 
 #include "ClosedGL/Core/Timestep.h"
-#include "ClosedGL/Core/OrthographicCamera.h"
+#include "ClosedGL/Scene/OrthographicCamera.h"
 
 #include "Entity.h"
 #include <entt/entt.hpp>

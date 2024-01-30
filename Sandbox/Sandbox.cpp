@@ -1,7 +1,7 @@
 #pragma once
 #include <ClosedGL.h>
 
-#include "ClosedGL/Core/OrthographicCamera.h"
+#include "ClosedGL/Scene/OrthographicCamera.h"
 
 #include "ClosedGL/Renderer/Texture.h"
 #include "ClosedGL/Scene/Components.h"
@@ -11,6 +11,7 @@
 #include <random>
 
 #include "ClosedGL/Events/KeyEvents.h"
+
 
 static std::random_device dev;
 static std::mt19937 rng(dev());

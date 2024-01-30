@@ -6,9 +6,20 @@
 
 #include "ClosedGL/Scene/Scene.h"
 
-#include "ClosedGL/Core/OrthographicCamera.h"
+#include "ClosedGL/Scene/OrthographicCamera.h"
 
 namespace Renderer2D {
+
+	struct RendererStats {
+		static uint32_t drawCalls;
+		static uint32_t polyCount;
+
+		static void reset() {
+			drawCalls = 0;
+			polyCount = 0;
+		}
+
+	};
 
 	static constexpr unsigned int layoutSize = 8 + 12 + 8 + 4;	// pos + color + textCoord
 	static constexpr int BATCH_CAPACITY = 100;

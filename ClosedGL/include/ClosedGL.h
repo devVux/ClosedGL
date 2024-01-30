@@ -9,7 +9,6 @@
 #include "ClosedGL/Core/Input.h"
 
 #include "ClosedGL/Layers/Layer.h"
-#include "ClosedGL/Layers/ImGuiLayer.h"
 
 #include "ClosedGL/Renderer/Renderer2D.h"
 #include "ClosedGL/Renderer/Buffer.h"
