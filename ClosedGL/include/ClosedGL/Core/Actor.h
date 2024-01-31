@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Timestep.h"
+#include "Clock.h"
 
 #include "ClosedGL/Renderer/Shader.h"
 #include "ClosedGL/Renderer/Buffer.h"

@@ -24,9 +24,10 @@ class Application: public EventListener, public Subject {
 		void init();
 
 		virtual void run();
+        void updateAll(Timestep ts);
 		virtual void update(Timestep ts) {}
 		void onEvent(Event& e) override;
-		
+
 
 		virtual void notify() override {
 			std::for_each(std::begin(mObservers), std::end(mObservers), [](Observer* observer) {

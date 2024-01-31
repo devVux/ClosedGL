@@ -26,14 +26,9 @@ void OrthographicCamera::update(Timestep ts) {
 		mView = glm::translate(mView, glm::vec3(-mSpeed * ts, 0, 0));
 
 	if (Input::isKeyDown(Keys::Q))
-		mView = glm::rotate(mView, mSpeed * ts, glm::vec3(0, 0, mSpeed * ts));
+		mView = glm::rotate(mView, mSpeed * (float) ts, glm::vec3(0, 0, mSpeed * ts));
 	if (Input::isKeyDown(Keys::E))
-		mView = glm::rotate(mView, mSpeed * ts, glm::vec3(0, 0, -mSpeed * ts));
-
-	if (Input::isKeyDown(Keys::Q))
-		mView = glm::rotate(mView, mSpeed * ts, glm::vec3(0, 0, mSpeed * ts));
-	if (Input::isKeyDown(Keys::E))
-		mView = glm::rotate(mView, mSpeed * ts, glm::vec3(0, 0, -mSpeed * ts));
+		mView = glm::rotate(mView, mSpeed * (float) ts, glm::vec3(0, 0, -mSpeed * ts));
 
 
 }

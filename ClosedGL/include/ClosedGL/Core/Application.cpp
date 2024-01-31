@@ -45,32 +45,35 @@ void Application::init() {
 void Application::run() {
 
 	mRunning = true;
+	Clock::reset();
 
-	float t = static_cast<float>(glfwGetTime());
-	float currentTime;
-
+	Timestep accumulator = 0;
 
 	while (mRunning) {
 
 		Renderer2D::clear();
 
-		currentTime = static_cast<float>(glfwGetTime());
-		Timestep ts(std::min(currentTime - t, 0.05f));
-		t = currentTime;
+		Timestep ts = Clock::tick();
+		accumulator += ts;
 
-		mWorld.update(ts, 1, 1);
-		
+		while (accumulator >= Clock::tickInterval()) {
+
+			mWorld.update(Clock::tickInterval(), 1, 1);
+
+			accumulator -= Clock::tickInterval();
+
+		}
+
 		notify();
 
-
 		update(ts);
-
-		//std::this_thread::sleep_for(std::chrono::milliseconds(10));
-
 		pWindow->update();
 
 	}
 
+}
+
+void Application::updateAll(Timestep ts) {
 }
 
 void Application::onEvent(Event& e) {

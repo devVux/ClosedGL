@@ -2,7 +2,7 @@
 
 #include <glm/glm.hpp>
 
-#include "ClosedGL/Core/Timestep.h"
+#include "ClosedGL/Core/Clock.h"
 #include "ClosedGL/Utils/Utils.h"
 
 #include "ClosedGL/Events/Event.h"

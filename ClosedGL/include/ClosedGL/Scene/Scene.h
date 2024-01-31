@@ -1,6 +1,6 @@
 #pragma once
 
-#include "ClosedGL/Core/Timestep.h"
+#include "ClosedGL/Core/Clock.h"
 #include "ClosedGL/Scene/OrthographicCamera.h"
 
 #include "Entity.h"
