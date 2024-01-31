@@ -20,7 +20,7 @@ void View::update() {
 	mLayers.updateOverlays();
 	mLayers.updateLayers();
 	
-	pStatsLayer->update(0.5);
+	pStatsLayer->update();
 
 	end();
 

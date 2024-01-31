@@ -29,7 +29,6 @@ int main() {
 	eventHandler.registerListener(app);
 	app->init();
 
-	TRACE(Input::isKeyDown(Keys::APOSTROPHE));
 	app->run();
 
 	eventHandler.stop();

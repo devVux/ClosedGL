@@ -54,7 +54,6 @@ set(SOURCES
 	"include/ClosedGL/Core/backends/imgui_impl_opengl3.cpp"
 		
 	"include/ClosedGL/Layers/LayerStack.cpp"
-	"include/ClosedGL/Layers/StatsLayer.cpp"
 
 	"include/ClosedGL/Layers/ImGuiController.cpp"
 	"include/ClosedGL/Layers/View.cpp"
