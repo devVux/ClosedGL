@@ -4,11 +4,13 @@
 #include "ClosedGL/Events/Event.h"
 
 #include "ClosedGL/Renderer/Renderer.h"
-#include "ClosedGL/Layers/LayerStack.h"
 
 #include <Physiks/World.h>
 
-class Application: public EventListener {
+#include "ClosedGL/Utils/Observer.h"
+#include <algorithm>
+
+class Application: public EventListener, public Subject {
 
 	public:
 
@@ -22,9 +24,16 @@ class Application: public EventListener {
 		void init();
 
 		virtual void run();
+        void updateAll(Timestep ts);
 		virtual void update(Timestep ts) {}
 		void onEvent(Event& e) override;
-		
+
+
+		virtual void notify() override {
+			std::for_each(std::begin(mObservers), std::end(mObservers), [](Observer* observer) {
+				observer->update();
+			});
+		}
 
 		void* nativeWindow() const { return pWindow->native(); }
 
@@ -33,9 +42,7 @@ class Application: public EventListener {
 		AWindow* pWindow;
 		EventDispatcher mDispatcher;
 
-		// layer stack will call delete
-		class ImGuiLayer* pImGuiLayer;
-		class StatsLayer* pStatsLayer;
+
 		
 		bool mRunning { false };
 	
@@ -43,7 +50,6 @@ class Application: public EventListener {
 
 		World mWorld;
 	
-		LayerStack mLayers;
 
 	private:
 

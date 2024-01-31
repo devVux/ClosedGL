@@ -63,7 +63,7 @@ void IndexBuffer::insert(unsigned int* indices, unsigned int offset, unsigned in
 	glBufferSubData(GL_ARRAY_BUFFER, offset, size, indices);
 }
 
-void IndexBuffer::push(unsigned int* indices, unsigned int size, GLenum mode /*= GL_DYNAMIC_DRAW*/) {
+void IndexBuffer::push(unsigned int* indices, unsigned int size, GLenum mode) {
 	mCount = size / sizeof(GLuint);
 	#ifdef _DEBUG
 		pData = new unsigned int[mCount];

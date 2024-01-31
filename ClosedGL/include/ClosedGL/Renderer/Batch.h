@@ -6,7 +6,7 @@
 
 #include <vector>
 
-#include "ClosedGL/Core/OrthographicCamera.h"
+#include "ClosedGL/Scene/OrthographicCamera.h"
 
 class Batch {
 

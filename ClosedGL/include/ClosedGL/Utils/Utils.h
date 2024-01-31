@@ -22,9 +22,3 @@ struct Coords {
 	float width;
 	float height;
 };
-
-struct Stats {
-	uint32_t fps;
-	uint32_t drawCalls;
-	uint32_t polyCount;
-};

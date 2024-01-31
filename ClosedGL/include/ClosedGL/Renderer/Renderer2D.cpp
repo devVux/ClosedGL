@@ -4,6 +4,9 @@
 
 namespace Renderer2D {
 
+	uint32_t Renderer2D::RendererStats::drawCalls = 0;
+	uint32_t Renderer2D::RendererStats::polyCount = 0;
+
 	struct RendererStorage {
 		Shader* pShader;
 		VertexArray* pVertexArray;
@@ -38,7 +41,7 @@ namespace Renderer2D {
 	};
 
 	static RendererStorage storage;
-
+	
 	void init() {
 
 	   // Batch init
@@ -112,7 +115,7 @@ namespace Renderer2D {
 
 		storage.pBuffer->insert(p.data, storage.mCurrentPos * sizeof(float), p.count * sizeof(float));
 		storage.mCurrentPos += p.count;
-
+		Renderer2D::RendererStats::polyCount++;
 	}
 
 	void clear(float r, float g, float b) {
@@ -130,6 +133,8 @@ namespace Renderer2D {
 		storage.pVertexArray->bind();
 
 		storage.mCurrentPos = 0;
+		Renderer2D::RendererStats::reset();
+
 	}
 
 	void endScene() {
@@ -200,6 +205,7 @@ namespace Renderer2D {
 		storage.pIndexBuffer->bind();
 
 		glDrawElements(GL_TRIANGLES, storage.pIndexBuffer->count(), GL_UNSIGNED_INT, 0);
+		Renderer2D::RendererStats::drawCalls++;
 
 	}
 

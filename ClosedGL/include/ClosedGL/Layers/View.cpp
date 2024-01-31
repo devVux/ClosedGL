@@ -1,16 +1,32 @@
 #include "pch.h"
-#include "ImGuiLayer.h"
+#include "View.h"
+
+#include "ClosedGL/Core/Application.h"
 
 #include "imgui.h"
 #include "backends/imgui_impl_glfw.h"
 #include "backends/imgui_impl_opengl3.h"
 
-#include "ClosedGL/Core/Application.h"
+View::View(Application* model): mModel(model) {
+	model->registerObserver(this);
+	pStatsLayer->registerObserver(this);
+}
 
-static bool initialized = false;	
+// on application update
+void View::update() {
 
-void ImGuiLayer::attach() {
+	begin();
+
+	mLayers.updateOverlays();
+	mLayers.updateLayers();
 	
+	pStatsLayer->update(0.5);
+
+	end();
+
+}
+
+void View::init() {
 	ImGui::CreateContext();
 	ImGuiIO& io = ImGui::GetIO(); (void) io;
 	io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
@@ -19,22 +35,21 @@ void ImGuiLayer::attach() {
 
 	ImGui_ImplGlfw_InitForOpenGL(static_cast<GLFWwindow*>(Application::instance().nativeWindow()), true);
 	ImGui_ImplOpenGL3_Init("#version 410 core");
-
 }
 
-void ImGuiLayer::detach() {
+void View::destroy() {
 	ImGui_ImplOpenGL3_Shutdown();
 	ImGui_ImplGlfw_Shutdown();
 	ImGui::DestroyContext();
 }
 
-void ImGuiLayer::begin() {
+void View::begin() {
 	ImGui_ImplOpenGL3_NewFrame();
 	ImGui_ImplGlfw_NewFrame();
 	ImGui::NewFrame();
 }
 
-void ImGuiLayer::end() {
+void View::end() {
 	ImGui::Render();
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 }

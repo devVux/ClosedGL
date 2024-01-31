@@ -8,22 +8,20 @@
 
 #include "ClosedGL/Renderer/Renderer2D.h"
 
-#include "ClosedGL/Layers/ImGuiLayer.h"
 #include "ClosedGL/Layers/StatsLayer.h"
 
 static void MessageCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar * message, const void* userParam) {
-	fprintf(stderr, "GL CALLBACK: %s type = 0x%x, severity = 0x%x, message = %s\n", (type == GL_DEBUG_TYPE_ERROR ? "** GL ERROR **" : ""), type, severity, message);
+	if (severity != GL_DEBUG_SEVERITY_NOTIFICATION)
+		fprintf(stderr, "GL CALLBACK: %s type = 0x%x, severity = 0x%x, message = %s\n", (type == GL_DEBUG_TYPE_ERROR ? "** GL ERROR **" : ""), type, severity, message);
 }
 
 Application* Application::sInstance = nullptr;
 
-Application::Application(AWindow* window): pWindow(window), pImGuiLayer(new ImGuiLayer), pStatsLayer(new StatsLayer) {
+Application::Application(AWindow* window): pWindow(window) {
 
 	sInstance = this;
 	
 	pWindow->init();
-
-	mLayers.pushOverlay(pImGuiLayer);
 
 }
 
@@ -47,33 +45,35 @@ void Application::init() {
 void Application::run() {
 
 	mRunning = true;
+	Clock::reset();
 
-	float t = static_cast<float>(glfwGetTime());
-	float currentTime;
-
+	Timestep accumulator = 0;
 
 	while (mRunning) {
 
 		Renderer2D::clear();
 
-		currentTime = static_cast<float>(glfwGetTime());
-		Timestep ts(std::min(currentTime - t, 0.05f));
-		t = currentTime;
+		Timestep ts = Clock::tick();
+		accumulator += ts;
 
-		mWorld.update(ts, 1, 1);
-		
-		pImGuiLayer->begin();
-		mLayers.updateOverlays();
-		mLayers.updateLayers();
-		pImGuiLayer->end();
+		while (accumulator >= Clock::tickInterval()) {
 
+			mWorld.update(Clock::tickInterval(), 1, 1);
+
+			accumulator -= Clock::tickInterval();
+
+		}
+
+		notify();
 
 		update(ts);
-
 		pWindow->update();
 
 	}
 
+}
+
+void Application::updateAll(Timestep ts) {
 }
 
 void Application::onEvent(Event& e) {
