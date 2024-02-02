@@ -1,0 +1,12 @@
+{
+    "name": "your-project-name",
+    "version-string": "0.0.1",
+    "dependencies": [
+        "spdlog",
+        "glad",
+        "glfw3",
+        "glm",
+        "entt",
+        "stb"
+    ]
+}
