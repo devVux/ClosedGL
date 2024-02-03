@@ -15,21 +15,21 @@
 								"type": "equals",
 								"lhs": "${hostSystemName}",
 								"rhs": "Windows"
+						},
+						"toolchainFile": "${sourceDir}/vcpkg/scripts/buildsystems/vcpkg.cmake"
+				},
+				{
+						"name": "x64-debug",
+						"displayName": "x64 Debug",
+						"inherits": "windows-base",
+						"architecture": {
+								"value": "x64",
+								"strategy": "external"
+						},
+						"cacheVariables": {
+								"CMAKE_BUILD_TYPE": "Debug"
 						}
 				},
-			{
-				"name": "x64-debug",
-				"displayName": "x64 Debug",
-				"inherits": "windows-base",
-				"architecture": {
-					"value": "x64",
-					"strategy": "external"
-				},
-				"cacheVariables": {
-					"CMAKE_BUILD_TYPE": "Debug"
-				},
-				"toolchainFile": "${sourceDir}/vcpkg/scripts/buildsystems/vcpkg.cmake"
-			},
 				{
 						"name": "x64-release",
 						"displayName": "x64 Release",
