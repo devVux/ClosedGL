@@ -18,3 +18,4 @@ vcpkg/
 /ClosedGL/include/ClosedGL/Renderer/Batch.h
 /ClosedGL/include/ClosedGL/Renderer/Renderer.cpp
 /ClosedGL/include/ClosedGL/Renderer/Renderer.h
+/vcpkg_installed/x64-windows
