@@ -14,7 +14,6 @@ _deps
 .vs/
 out/
 vcpkg/
-CMakePresets.json
 /ClosedGL/include/ClosedGL/Renderer/Batch.cpp
 /ClosedGL/include/ClosedGL/Renderer/Batch.h
 /ClosedGL/include/ClosedGL/Renderer/Renderer.cpp

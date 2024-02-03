@@ -1,0 +1,35 @@
+﻿{
+	"version": 3,
+	"configurePresets": [
+		{
+			"name": "windows-base",
+			"generator": "Ninja",
+			"binaryDir": "${sourceDir}/out/build/${presetName}",
+			"installDir": "${sourceDir}/out/install/${presetName}",
+			"cacheVariables": {
+				"CMAKE_C_COMPILER": "cl.exe",
+				"CMAKE_CXX_COMPILER": "cl.exe",
+				"CMAKE_TOOLCHAIN_FILE": "${sourceDir}/vcpkg/scripts/buildsystems/vcpkg.cmake"
+			}, 
+			"condition": {
+				"type": "equals",
+				"lhs": "${hostSystemName}",
+				"rhs": "Windows"
+			}
+		}
+	],
+	"buildPresets": [
+		{
+			"name": "x64-debug",
+			"displayName": "x64 Debug",
+			"configurePreset": "windows-base",
+			"configuration": "Debug"
+		},
+		{
+			"name": "x64-release",
+			"displayName": "x64 Release",
+			"configurePreset": "windows-base",
+			"configuration": "Release"
+		}
+	]
+}

@@ -1,3 +1,10 @@
 [submodule "vendor/Physiks"]
 	path = vendor/Physiks
 	url = https://github.com/devVux/Physiks.git
+[submodule "vcpkg"]
+	path = vcpkg
+	url = https://github.com/microsoft/vcpkg
+[submodule "vendor/imgui"]
+	path = vendor/imgui
+	url = https://github.com/ocornut/imgui.git
+	branch = docking
