@@ -23,13 +23,13 @@
 		{
 			"name": "x64-debug",
 			"displayName": "x64 Debug",
-			"inherits": "windows-base",
+			"configurePreset": "windows-base",
 			"configuration": "Debug"
 		},
 		{
 			"name": "x64-release",
 			"displayName": "x64 Release",
-			"inherits": "windows-base",
+			"configurePreset": "windows-base",
 			"configuration": "Release"
 		}
 	]
