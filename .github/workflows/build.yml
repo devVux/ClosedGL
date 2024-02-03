@@ -2,8 +2,19 @@
 name: 'CMake Build Matrix'
 on: push
 jobs:
-  build:
+  job:
+    name: Test
     runs-on: windows-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest]
+        include:
+          - os: windows-latest
+            triplet: x64-windows
+
+    env:
+      VCPKG_DEFAULT_TRIPLET: ${{ matrix.triplet }}
     steps:
       - name: Hello step
         run: echo "Hello world"
