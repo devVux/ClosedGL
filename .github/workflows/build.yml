@@ -38,4 +38,4 @@ jobs:
         with:
           configurePreset: 'ninja-multi-vcpkg'
           buildPreset: 'ninja-multi-vcpkg'
-          buildPresetAdditionalArgs: '[`--config x64-Release`]'
+          buildPresetAdditionalArgs: '[`--config x64-release`]'
