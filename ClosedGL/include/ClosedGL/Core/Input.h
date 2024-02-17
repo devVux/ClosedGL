@@ -4,6 +4,7 @@
 
 #include "ClosedGL/Events/KeyEvents.h"
 #include "ClosedGL/Events/MouseEvents.h"
+#include "ClosedGL/Core/Window.h"
 
 class GLFWWindow;
 
@@ -47,13 +48,11 @@ class Input {
 
 
 
-
-
 class GLFWInput: public IInput {
 
 	public:
 
-		GLFWInput(GLFWWindow* window);
+		GLFWInput(Window* window): pWindow(window) { }
 
 		virtual bool isKeyDown(Keys keyCode) const;
 
@@ -63,6 +62,6 @@ class GLFWInput: public IInput {
 
 	private:
 
-		GLFWWindow* pWindow;
+		Window* pWindow;
 
 };

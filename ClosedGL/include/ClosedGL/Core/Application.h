@@ -4,6 +4,7 @@
 #include "ClosedGL/Events/Event.h"
 
 #include "ClosedGL/Renderer/Renderer.h"
+#include "ClosedGL/Scene/Scene.h"
 
 #include <Physiks/World.h>
 
@@ -14,18 +15,31 @@ class Application: public EventListener, public Subject {
 
 	public:
 
+		struct Stats {
+
+			static uint32_t updates;
+			static uint32_t frameNr;
+
+			static void reset() {
+				updates = 0;
+				frameNr = 0;
+			}
+
+		};
+
+	public:
+
 		static Application& instance() { return *sInstance; }
 
-		Application(AWindow* window);
+		Application(Window* window);
 		virtual ~Application() {
-			delete pWindow;
+			
 		}
 
 		void init();
 
 		virtual void run();
-        void updateAll(Timestep ts);
-		virtual void update(Timestep ts) {}
+		void render(Timestep ts);
 		void onEvent(Event& e) override;
 
 
@@ -35,20 +49,21 @@ class Application: public EventListener, public Subject {
 			});
 		}
 
-		void* nativeWindow() const { return pWindow->native(); }
+		GLFWwindow* nativeWindow() const { return pWindow->native(); }
 
 	private:
 
-		AWindow* pWindow;
+		Window* pWindow;
 		EventDispatcher mDispatcher;
 
-
+		Scene mScene;
 		
 		bool mRunning { false };
 	
 	protected:
 
 		World mWorld;
+		OrthographicCamera mCamera;
 	
 
 	private:
@@ -59,6 +74,6 @@ class Application: public EventListener, public Subject {
 
 namespace ClosedGL {
 	
-	extern Application* create(AWindow* window);
+	extern Application* create(Window* window);
 
 }

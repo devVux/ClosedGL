@@ -10,7 +10,7 @@
 
 namespace Renderer2D {
 
-	struct RendererStats {
+	struct Stats {
 		static uint32_t drawCalls;
 		static uint32_t polyCount;
 

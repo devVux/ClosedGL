@@ -4,25 +4,18 @@
 #include "ClosedGL/Renderer/Renderer2D.h"
 #include "Physiks/Body.h"
 
-void Scene::beginScene(const OrthographicCamera& camera) {
-	mView = camera.view();
-	mProjection = camera.projection();
-}
-
-std::shared_ptr<Entity> Scene::createEntity() {
-	return std::make_shared<Entity>(mRegistry, mRegistry.create());
-}
+#include "ClosedGL/Core/Managers/SceneManager.h"
 
 void Scene::update(Timestep ts) {
-	
-	const auto& group = mRegistry.group<PhysicsComponent<Body>>(entt::get<TransformComponent, SpriteComponent>);
+
+	const auto& group = SceneManager::view<PhysicsComponent, TransformComponent, SpriteComponent>();
 
 	for (auto entity : group) {
-		
-		auto& p = group.get<PhysicsComponent<Body>>(entity);
+
+		auto& p = group.get<PhysicsComponent>(entity);
 		auto& t = group.get<TransformComponent>(entity);
 		auto& s = group.get<SpriteComponent>(entity);
-		
+
 		auto& b = p.body;
 
 		t.setPosition(glm::vec2(b->position().x, b->position().y));
@@ -31,9 +24,14 @@ void Scene::update(Timestep ts) {
 
 	}
 
-}
+	const auto& view = SceneManager::view<MotionComponent>();
 
-void Scene::updatePhysics(Timestep ts) {
+	for (auto entity : view) {
 
+		auto& m = view.get<MotionComponent>(entity);
+
+		m.move(ts);
+
+	}
 
 }

@@ -15,9 +15,17 @@ static void MessageCallback(GLenum source, GLenum type, GLuint id, GLenum severi
 		fprintf(stderr, "GL CALLBACK: %s type = 0x%x, severity = 0x%x, message = %s\n", (type == GL_DEBUG_TYPE_ERROR ? "** GL ERROR **" : ""), type, severity, message);
 }
 
+
+uint32_t Application::Stats::updates = 0;
+uint32_t Application::Stats::frameNr = 0;
+
 Application* Application::sInstance = nullptr;
 
-Application::Application(AWindow* window): pWindow(window) {
+
+Timestep Time::delta = 0;
+
+
+Application::Application(Window* window): pWindow(window) {
 
 	sInstance = this;
 	
@@ -45,35 +53,40 @@ void Application::init() {
 void Application::run() {
 
 	mRunning = true;
-	Clock::reset();
-
+	Clock clock;
 	Timestep accumulator = 0;
+
+	Stats::updates = 1 / clock.tickInterval() + 1;
 
 	while (mRunning) {
 
-		Renderer2D::clear();
+		pWindow->pollEvents();
 
-		Timestep ts = Clock::tick();
+		Timestep ts = clock.tick();
+		Time::delta = ts;
 		accumulator += ts;
 
-		while (accumulator >= Clock::tickInterval()) {
-
-			mWorld.update(Clock::tickInterval(), 1, 1);
-
-			accumulator -= Clock::tickInterval();
-
+		while (accumulator >= clock.tickInterval()) {
+			//mWorld.fixedUpdate(clock.tickInterval(), 1, 1);
+			accumulator -= clock.tickInterval();
 		}
 
-		notify();
-
-		update(ts);
-		pWindow->update();
+		mWorld.update(ts, 1, 1);
+		render(ts);
 
 	}
 
 }
 
-void Application::updateAll(Timestep ts) {
+void Application::render(Timestep ts) {
+	Renderer2D::clear();
+	Renderer2D::beginScene(mCamera);
+	mCamera.update(ts);
+	mScene.update(ts);
+	Renderer2D::endScene();
+
+	notify();
+	pWindow->swapBuffers();
 }
 
 void Application::onEvent(Event& e) {

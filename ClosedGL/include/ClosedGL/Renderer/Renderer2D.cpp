@@ -4,8 +4,8 @@
 
 namespace Renderer2D {
 
-	uint32_t Renderer2D::RendererStats::drawCalls = 0;
-	uint32_t Renderer2D::RendererStats::polyCount = 0;
+	uint32_t Renderer2D::Stats::drawCalls = 0;
+	uint32_t Renderer2D::Stats::polyCount = 0;
 
 	struct RendererStorage {
 		Shader* pShader;
@@ -115,7 +115,7 @@ namespace Renderer2D {
 
 		storage.pBuffer->insert(p.data, storage.mCurrentPos * sizeof(float), p.count * sizeof(float));
 		storage.mCurrentPos += p.count;
-		Renderer2D::RendererStats::polyCount++;
+		Renderer2D::Stats::polyCount++;
 	}
 
 	void clear(float r, float g, float b) {
@@ -124,7 +124,6 @@ namespace Renderer2D {
 	}
 
 	void beginScene(const OrthographicCamera& camera) {
-	//storage.scene.beginScene(camera);
 
 		storage.pShader->bind();
 		storage.pShader->setUniformMatrix4("uProj", camera.projection());
@@ -133,7 +132,7 @@ namespace Renderer2D {
 		storage.pVertexArray->bind();
 
 		storage.mCurrentPos = 0;
-		Renderer2D::RendererStats::reset();
+		Renderer2D::Stats::reset();
 
 	}
 
@@ -205,7 +204,7 @@ namespace Renderer2D {
 		storage.pIndexBuffer->bind();
 
 		glDrawElements(GL_TRIANGLES, storage.pIndexBuffer->count(), GL_UNSIGNED_INT, 0);
-		Renderer2D::RendererStats::drawCalls++;
+		Renderer2D::Stats::drawCalls++;
 
 	}
 

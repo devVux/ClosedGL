@@ -85,18 +85,7 @@ class EventDispatcher {
 
 };
 
-
-class IEventHandler {
-
-	public:
-
-		virtual ~IEventHandler() = default;
-
-		virtual void push(Event* e) = 0;
-
-};
-
-class EventHandler: public IEventHandler {
+class EventHandler {
 
 	public:
 
