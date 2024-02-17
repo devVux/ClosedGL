@@ -30,13 +30,13 @@ layout(location = 0) out vec4 fragColor;
 
 in vec4 vColor;
 in vec2 vTextCoords;
-flat in int vTextUnit;
+flat in int vTextIndex;
 
 layout(binding = 6, std430) uniform textureSSBO {
 	sampler2D textures[69];
 };
 
 void main() {
-    fragColor = texture(textures[index], vTextCoords) * vColor;
+    fragColor = texture(textures[vTextIndex], vTextCoords) * vColor;
     //fragColor = vec4(vTextUnit, vTextUnit, vTextUnit, 1.0);
 }
