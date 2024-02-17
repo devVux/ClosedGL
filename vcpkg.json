@@ -1,13 +1,16 @@
 {
-    "name": "closed-gl",
-    "version-string": "0.0.1",
-    "dependencies": [
-        "spdlog",
-        "glad",
-        "glfw3",
-        "glm",
-        "entt",
+		"name": "closed-gl",
+		"version-string": "0.0.1",
+		"dependencies": [
+				{
+					"name": "glad",
+					"features": ["gl-api-latest", "extensions"]
+				},
+				"spdlog",
+				"glfw3",
+				"glm",
+				"entt",
 				"stb",
 				"gtest"
-    ]
+		]
 }
