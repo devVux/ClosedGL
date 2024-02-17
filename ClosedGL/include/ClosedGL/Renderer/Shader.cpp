@@ -117,12 +117,9 @@ void Shader::setSources(std::string vertex, std::string fragment) {
 
 	GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
 
-	// Send the vertex shader source code to GL
-	// Note that std::string's .c_str is NULL character terminated.
 	const GLchar* source = (const GLchar*) vertex.c_str();
 	glShaderSource(vertexShader, 1, &source, 0);
 
-	// Compile the vertex shader
 	glCompileShader(vertexShader);
 
 	GLint isCompiled = 0;
@@ -131,29 +128,20 @@ void Shader::setSources(std::string vertex, std::string fragment) {
 		GLint maxLength = 0;
 		glGetShaderiv(vertexShader, GL_INFO_LOG_LENGTH, &maxLength);
 
-		// The maxLength includes the NULL character
-		std::vector<GLchar> infoLog(maxLength);
+		char* infoLog = new char[maxLength];
+
 		glGetShaderInfoLog(vertexShader, maxLength, &maxLength, &infoLog[0]);
 
-		// We don't need the shader anymore.
-		glDeleteShader(vertexShader);
+		ERRORE("Error in vertex shader:\n" + std::string(infoLog));
 
-		// Use the infoLog as you see fit.
-		ERRORE("Error in vertex shader");
-
-		// In this simple program, we'll just leave
-		return;
+		delete[] infoLog;
 	}
 
-	// Create an empty fragment shader handle
 	GLuint fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
 
-	// Send the fragment shader source code to GL
-	// Note that std::string's .c_str is NULL character terminated.
 	source = (const GLchar*) fragment.c_str();
 	glShaderSource(fragmentShader, 1, &source, 0);
 
-	// Compile the fragment shader
 	glCompileShader(fragmentShader);
 
 	glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &isCompiled);
@@ -161,10 +149,11 @@ void Shader::setSources(std::string vertex, std::string fragment) {
 		GLint maxLength = 0;
 		glGetShaderiv(fragmentShader, GL_INFO_LOG_LENGTH, &maxLength);
 
-		// The maxLength includes the NULL character
-		std::vector<GLchar> infoLog(maxLength);
+		char* infoLog = new char[maxLength];
+
 		glGetShaderInfoLog(fragmentShader, maxLength, &maxLength, &infoLog[0]);
 
+<<<<<<< Updated upstream
 		// We don't need the shader anymore.
 		glDeleteShader(fragmentShader);
 		// Either of them. Don't leak shaders.
@@ -175,6 +164,11 @@ void Shader::setSources(std::string vertex, std::string fragment) {
 
 		// In this simple program, we'll just leave
 		return;
+=======
+		FATAL("Error in fragment shader:\n" + std::string(infoLog));
+		
+		delete[] infoLog;
+>>>>>>> Stashed changes
 	}
 
 	// Vertex and fragment shaders are successfully compiled.
