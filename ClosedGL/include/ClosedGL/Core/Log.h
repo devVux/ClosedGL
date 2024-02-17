@@ -22,7 +22,7 @@ class Log {
 
 
 // Core log macros
-#define FATAL(...)	Log::coreLogger()->fatal(__VA_ARGS__)
+#define FATAL(...)	Log::coreLogger()->critical(__VA_ARGS__); assert(0 && "Terminating")
 #define ERRORE(...)	Log::coreLogger()->error(__VA_ARGS__)
 #define WARN(...)	Log::coreLogger()->warn(__VA_ARGS__)
 #define INFO(...)	Log::coreLogger()->info(__VA_ARGS__)

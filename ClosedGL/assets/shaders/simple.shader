@@ -1,5 +1,6 @@
 @vertex
 #version 410 core
+#extension GL_ARB_bindless_texture: require
 
 layout(location = 0) in vec2 aPosition;
 layout(location = 1) in vec3 aColor;
@@ -23,6 +24,7 @@ void main() {
 
 @fragment
 #version 410 core
+#extension GL_ARB_bindless_texture: require
 
 layout(location = 0) out vec4 fragColor;
 
@@ -30,7 +32,9 @@ in vec4 vColor;
 in vec2 vTextCoords;
 in float vTextUnit;
 
-uniform sampler2D uTextures[32];
+layout(binding = 6, std430) buffer textureSSBO {
+	sampler2D textures[];
+};
 
 void main() {
     int index = int(vTextUnit);
