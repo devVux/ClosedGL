@@ -132,7 +132,7 @@ void Shader::setSources(std::string vertex, std::string fragment) {
 
 		glGetShaderInfoLog(vertexShader, maxLength, &maxLength, &infoLog[0]);
 
-		ERRORE("Error in vertex shader:\n" + std::string(infoLog));
+		FATAL("Error in vertex shader:\n" + std::string(infoLog));
 
 		delete[] infoLog;
 	}
@@ -175,11 +175,11 @@ void Shader::setSources(std::string vertex, std::string fragment) {
 	glGetProgramiv(program, GL_LINK_STATUS, (int*) &isLinked);
 	if (isLinked == GL_FALSE) {
 		GLint maxLength = 0;
+		glGetProgramiv(program, GL_INFO_LOG_LENGTH, &maxLength);
 
 		char* infoLog = new char[maxLength];
-		glGetShaderInfoLog(fragmentShader, maxLength, &maxLength, &infoLog[0]);
+		glGetProgramInfoLog(program, maxLength, &maxLength, &infoLog[0]);
 
-		glGetProgramiv(program, GL_INFO_LOG_LENGTH, &maxLength);
 
 		// We don't need the program anymore.
 		glDeleteProgram(program);
