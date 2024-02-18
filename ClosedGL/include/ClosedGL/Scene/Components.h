@@ -8,8 +8,7 @@
 #include "ClosedGL/Scene/Entity.h"
 #include "ClosedGL/Utils/Utils.h"
 
-class Entity;
-class Texture;
+#include "ClosedGL/Renderer/Texture.h"
 
 struct TransformComponent {
 
@@ -50,8 +49,12 @@ struct PhysicsComponent {
 struct MeshComponent {
 
 	Texture* texture;
+	Coords coords;
 
-	MeshComponent(Texture* t): texture(t) { }
+	MeshComponent(Texture* t): texture(t), coords({ 0, 0, t->width(), t->height() }) { }
+	MeshComponent(SubTexture* t): texture(t->texture()), coords(t->coords()) { }
+
+	operator const Texture&() const { return *texture; }
 
 };
 

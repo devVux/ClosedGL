@@ -164,7 +164,7 @@ namespace Renderer2D {
 
 	}
 	
-	void drawQuad(const glm::mat4& transform, const Texture& texture, const glm::vec3& color) {
+	void drawQuad(const glm::mat4& transform, const Texture& texture, const Coords& coords, const glm::vec3& color) {
 
 		// TODO: export lambda
 		const glm::vec4 a = transform * VerticesDisposition::a;
@@ -174,11 +174,16 @@ namespace Renderer2D {
 
 		const float id = texture.index();
 
+		const glm::vec2 x = { (coords.x) / texture.width(),							(coords.y)					/ texture.height() };
+		const glm::vec2 y = { (coords.x + coords.width) / texture.width(),			(coords.y)					/ texture.height() };
+		const glm::vec2 w = { (coords.x + coords.width) / texture.width(),			(coords.y + coords.height)	/ texture.height() };
+		const glm::vec2 h = { (coords.x) / texture.width(),							(coords.y + coords.height)	/ texture.height() };
+
 		Polygon quad {
-			{ a[0],	a[1],	color.r, color.g, color.b,	0.0f, 0.0f,		id },
-			{ b[0],	b[1],	color.r, color.g, color.b,	1.0f, 0.0f,		id },
-			{ c[0],	c[1],	color.r, color.g, color.b,	1.0f, 1.0f,		id },
-			{ d[0],	d[1],	color.r, color.g, color.b,	0.0f, 1.0f,		id },
+			{ a.x,	a.y,	color.r, color.g, color.b,	x[0], x[1],		id },
+			{ b.x,	b.y,	color.r, color.g, color.b,	y[0], y[1],		id },
+			{ c.x,	c.y,	color.r, color.g, color.b,	w[0], w[1],		id },
+			{ d.x,	d.y,	color.r, color.g, color.b,	h[0], h[1],		id },
 		};
 
 		Renderer2D::insert(quad);
@@ -191,19 +196,11 @@ namespace Renderer2D {
 		storage.pIndexBuffer->bind();
 		glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 6, storage.ssbo);
 		
-		//glDrawElements(
-		//	GL_TRIANGLES,
-		//	storage.pIndexBuffer->count(),
-		//	GL_UNSIGNED_INT,
-		//	0
-		//);
-
-		glDrawElementsInstanced(
+		glDrawElements(
 			GL_TRIANGLES,
 			storage.pIndexBuffer->count(),
 			GL_UNSIGNED_INT,
-			0,
-			2
+			0
 		);
 
 		Renderer2D::Stats::drawCalls++;

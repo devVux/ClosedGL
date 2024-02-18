@@ -35,8 +35,8 @@ class Sandbox: public Application {
 			e.addComponent<TransformComponent>(glm::mat4(2.0f));
 			e.addComponent<SpriteComponent>(glm::vec3(0.0f));
 
-			Texture& whiteTexture = TextureManager::create(/*"F:\\dev\\ClosedGL\\ClosedGL\\assets\\sprites\\Minecraft\\wood.png"*/);
-			e.addComponent<MeshComponent>(&whiteTexture);
+			Texture& texture = TextureManager::create("F:\\dev\\ClosedGL\\ClosedGL\\assets\\sprites\\Minecraft\\wood.png");
+			e.addComponent<MeshComponent>(&texture);
 
 			Entity& e2 = SceneManager::createEntity();
 			Body* body2 = mWorld.createBody();
@@ -45,8 +45,9 @@ class Sandbox: public Application {
 			e2.addComponent<TransformComponent>(glm::mat4(1.0f));
 			e2.addComponent<SpriteComponent>(glm::vec3(0.0f));
 
-			Texture& texture2 = TextureManager::create("F:\\dev\\ClosedGL\\ClosedGL\\assets\\sprites\\Minecraft\\glass.png");
-			e2.addComponent<MeshComponent>(&texture2);			
+			Texture& texture2 = TextureManager::create("F:\\dev\\ClosedGL\\ClosedGL\\assets\\sprites\\Chayed's Free Pixels\\Game Boy\\Gameboy Tileset.png");
+			SubTexture sub = texture2.cutOut({ 0, 176, 16, 16 });
+			e2.addComponent<MeshComponent>(&sub);
 			
 			Entity& e3 = SceneManager::createEntity();
 			Body* body3 = mWorld.createBody();

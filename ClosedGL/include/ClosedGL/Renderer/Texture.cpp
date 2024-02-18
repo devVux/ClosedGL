@@ -51,12 +51,3 @@ bool operator!=(const Texture& left, const Texture& right) { return !(left == ri
 
 
 
-
-SubTexture::SubTexture(Texture* texture, float x, float y, float size): 
-	pTexture(texture), mCoords{ x, y, size, size } {
-}
-
-SubTexture::SubTexture(Texture* texture, float x, float y, float width, float height):
-	pTexture(texture), mCoords { x, y, width, height } {
-
-}

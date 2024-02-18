@@ -21,7 +21,7 @@ void Scene::update(Timestep ts) {
 
 		t.setPosition(glm::vec2(b->position().x, b->position().y));
 
-		Renderer2D::drawQuad(t.transform, *m.texture);
+		Renderer2D::drawQuad(t.transform, *m.texture, m.coords);
 
 	}
 

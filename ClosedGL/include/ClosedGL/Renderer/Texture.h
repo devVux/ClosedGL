@@ -1,5 +1,25 @@
 #pragma once
 
+class Texture;
+
+class SubTexture {
+
+	public:
+
+		SubTexture(Texture* texture, Coords coords): pTexture(texture), mCoords(coords) { }
+		
+		Texture *texture() const { return pTexture; }
+
+		Coords coords() const { return mCoords; }
+
+
+	private:
+
+		Texture* pTexture;
+		Coords mCoords;
+
+};
+
 class Texture {
 
 	public:
@@ -12,6 +32,10 @@ class Texture {
 
 		void setData(void* data);
 		void load(const std::string& path);
+
+		SubTexture cutOut(Coords coords) {
+			return SubTexture(this, coords);
+		}
 		
 		friend bool operator==(const Texture& left, const Texture& right);
 		friend bool operator!=(const Texture& left, const Texture& right);
@@ -39,20 +63,3 @@ class Texture {
 
 };
 
-class SubTexture {
- 
-	public:
-		
-		SubTexture(Texture* texture, float x, float y, float size);
-		SubTexture(Texture* texture, float x, float y, float width, float height);
-
-		const Texture& texture() const { return *pTexture; }
-
-		Coords coords() const { return mCoords; }
-
-	private:
-
-		Texture* pTexture;
-		Coords mCoords;
-
-};

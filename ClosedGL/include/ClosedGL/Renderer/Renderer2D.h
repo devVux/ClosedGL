@@ -65,7 +65,7 @@ namespace Renderer2D {
 
 	void drawQuad(glm::vec2 position, glm::vec2 size, glm::vec3 color = glm::vec3(1.0f));
 	void drawQuad(const glm::mat4& transform, const glm::vec3& color = glm::vec3(1.0f));
-	void drawQuad(const glm::mat4& transform, const Texture& texture, const glm::vec3& color = glm::vec3(1.0f));
+	void drawQuad(const glm::mat4& transform, const Texture& texture, const Coords& coords, const glm::vec3& color = glm::vec3(1.0f));
 	void draw();
 
 };
