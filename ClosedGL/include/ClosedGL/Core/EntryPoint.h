@@ -6,7 +6,7 @@
 #include <ClosedGL/Layers/Controller.h>
 #include "ClosedGL/Core/Input.h"
 
-extern Application* ClosedGL::create(AWindow* window);
+extern Application* ClosedGL::create(Window* window);
 
 int main() {
 
@@ -17,12 +17,12 @@ int main() {
 		eventHandler.run();
 	});
 
-	GLFWWindow* window = new GLFWWindow(&eventHandler);
+	Window window(&eventHandler);
 
-	GLFWInput* input = new GLFWInput(window);
+	GLFWInput* input = new GLFWInput(&window);
 	Input::setInputMode(input);
 
-	auto app = ClosedGL::create(window);
+	auto app = ClosedGL::create(&window);
 	View* view = new View(app);
 	view->init();
 	Controller* controller = new Controller(app, view);

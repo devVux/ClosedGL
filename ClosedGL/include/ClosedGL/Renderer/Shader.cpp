@@ -132,7 +132,7 @@ void Shader::setSources(std::string vertex, std::string fragment) {
 
 		glGetShaderInfoLog(vertexShader, maxLength, &maxLength, &infoLog[0]);
 
-		ERRORE("Error in vertex shader:\n" + std::string(infoLog));
+		FATAL("Error in vertex shader:\n" + std::string(infoLog));
 
 		delete[] infoLog;
 	}
@@ -153,47 +153,33 @@ void Shader::setSources(std::string vertex, std::string fragment) {
 
 		glGetShaderInfoLog(fragmentShader, maxLength, &maxLength, &infoLog[0]);
 
-<<<<<<< Updated upstream
-		// We don't need the shader anymore.
 		glDeleteShader(fragmentShader);
-		// Either of them. Don't leak shaders.
 		glDeleteShader(vertexShader);
 
-		// Use the infoLog as you see fit.
-		ERRORE("Error in fragment shader");
-
-		// In this simple program, we'll just leave
-		return;
-=======
 		FATAL("Error in fragment shader:\n" + std::string(infoLog));
 		
 		delete[] infoLog;
->>>>>>> Stashed changes
 	}
 
 	// Vertex and fragment shaders are successfully compiled.
 	// Now time to link them together into a program.
-	// Get a program object.
 	GLuint program = glCreateProgram();
 	mProgram = program;
 
-	// Attach our shaders to our program
 	glAttachShader(program, vertexShader);
 	glAttachShader(program, fragmentShader);
 
-	// Link our program
 	glLinkProgram(program);
 
-	// Note the different functions here: glGetProgram* instead of glGetShader*.
 	GLint isLinked = 0;
 	glGetProgramiv(program, GL_LINK_STATUS, (int*) &isLinked);
 	if (isLinked == GL_FALSE) {
 		GLint maxLength = 0;
 		glGetProgramiv(program, GL_INFO_LOG_LENGTH, &maxLength);
 
-		// The maxLength includes the NULL character
-		std::vector<GLchar> infoLog(maxLength);
+		char* infoLog = new char[maxLength];
 		glGetProgramInfoLog(program, maxLength, &maxLength, &infoLog[0]);
+
 
 		// We don't need the program anymore.
 		glDeleteProgram(program);
@@ -201,10 +187,9 @@ void Shader::setSources(std::string vertex, std::string fragment) {
 		glDeleteShader(vertexShader);
 		glDeleteShader(fragmentShader);
 
-		// Use the infoLog as you see fit.
+		FATAL("Error while linking shaders:\n" + std::string(infoLog));
 
-		// In this simple program, we'll just leave
-		return;
+		delete[] infoLog;
 	}
 
 	// Always detach shaders after a successful link.

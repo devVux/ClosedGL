@@ -30,6 +30,7 @@ include_directories(
     "${PROJECT_SOURCE_DIR}/include"
     "${PROJECT_SOURCE_DIR}/include/ClosedGL"
     "${PROJECT_SOURCE_DIR}/include/ClosedGL/Core"
+    "${PROJECT_SOURCE_DIR}/include/ClosedGL/Core/Managers"
     "${PROJECT_SOURCE_DIR}/include/ClosedGL/Events"
     "${PROJECT_SOURCE_DIR}/include/ClosedGL/Layers"
     "${PROJECT_SOURCE_DIR}/include/ClosedGL/Renderer"
@@ -43,10 +44,11 @@ set(SOURCES
 
 	"include/ClosedGL/Core/Application.cpp"
 	"include/ClosedGL/Core/Log.cpp"
-	"include/ClosedGL/Core/Clock.cpp"
 
 	"include/ClosedGL/Core/Window.cpp"
 	"include/ClosedGL/Core/Input.cpp"
+
+	"include/ClosedGL/Core/Managers/Managers.cpp"
 
 	"include/ClosedGL/Layers/LayerStack.cpp"
 
