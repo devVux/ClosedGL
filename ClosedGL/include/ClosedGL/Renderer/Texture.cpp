@@ -29,6 +29,20 @@ void Texture::load(const std::string& path) {
 
 }
 
+SubTexture Texture::cutOut(Coords coords) {
+	return SubTexture(this, coords);
+}
+
+//std::vector<SubTexture> Texture::cutOut(const std::initializer_list<Coords>& coords) {
+//    std::vector<SubTexture> v(coords.size());
+//
+//	size_t i = 0;
+//	for (const Coords& c : coords)
+//		v[i++] = SubTexture(this, c);
+//
+//	return v;
+//}
+
 void Texture::init() {
 	stbi_set_flip_vertically_on_load(1);
 
@@ -43,6 +57,7 @@ void Texture::init() {
 	glBindTexture(GL_TEXTURE_2D, 0);
 
 }
+
 
 
 bool operator==(const Texture& left, const Texture& right) { return left.mTextureID == right.mTextureID; }

@@ -3,12 +3,13 @@
 class Texture;
 
 class SubTexture {
-
-	public:
-
-		SubTexture(Texture* texture, Coords coords): pTexture(texture), mCoords(coords) { }
 		
-		Texture *texture() const { return pTexture; }
+	public:
+	
+		SubTexture() = default;
+		SubTexture(Texture* texture, const Coords& coords): pTexture(texture), mCoords(coords) { }
+	
+		Texture* texture() const { return pTexture; }
 
 		Coords coords() const { return mCoords; }
 
@@ -33,9 +34,8 @@ class Texture {
 		void setData(void* data);
 		void load(const std::string& path);
 
-		SubTexture cutOut(Coords coords) {
-			return SubTexture(this, coords);
-		}
+		SubTexture cutOut(Coords coords);
+		std::vector<SubTexture> cutOut(const std::initializer_list<Coords>& coords);
 		
 		friend bool operator==(const Texture& left, const Texture& right);
 		friend bool operator!=(const Texture& left, const Texture& right);

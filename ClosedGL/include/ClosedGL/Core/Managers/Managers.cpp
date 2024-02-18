@@ -8,3 +8,4 @@ entt::registry SceneManager::mRegistry;
 
 // Texture manager
 std::vector<const Texture*> TextureManager::mTextures;
+std::vector<const SubTexture*> TextureManager::mSubTextures;

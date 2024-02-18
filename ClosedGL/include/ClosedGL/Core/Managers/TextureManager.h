@@ -9,8 +9,14 @@ class TextureManager {
 	public:
 		
 		~TextureManager() {
-			for (const auto& texture : mTextures)
-				delete texture;
+			while (!mTextures.empty()) {
+				delete mTextures.back();
+				mTextures.pop_back();
+			}
+			while (!mSubTextures.empty()) {
+				delete mSubTextures.back();
+				mSubTextures.pop_back();
+			}
 		}
 
 		static Texture& create() {
@@ -42,6 +48,31 @@ class TextureManager {
 
 			mTextures.push_back(texture);
 			return *texture;
+		}
+
+		static SubTexture& crop(Texture& texture, const Coords& coords) {
+			SubTexture* subTexture = new SubTexture(&texture, coords);
+
+			mSubTextures.push_back(subTexture);
+			return *subTexture;
+		}
+
+		static std::vector<SubTexture> crop(Texture& texture, std::initializer_list<Coords> coords) {
+			std::vector<SubTexture> subs(coords.size());
+			mSubTextures.reserve(coords.size());
+
+			size_t i = 0;
+
+			for (const Coords& c : coords) {
+
+				SubTexture* text = new SubTexture(&texture, c);
+				mSubTextures.push_back(text);
+				subs[i] = *text;
+				
+				i++;
+			}
+
+			return subs;
 		}
 
 		static size_t size() {
@@ -76,5 +107,6 @@ class TextureManager {
 	private:
 
 		static std::vector<const Texture*> mTextures;
+		static std::vector<const SubTexture*> mSubTextures;
 
 };

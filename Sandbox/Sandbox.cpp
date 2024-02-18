@@ -25,6 +25,8 @@ static std::uniform_real_distribution<float> dim(0.1f, 1.0f);
 class Sandbox: public Application {
 
 	public:
+		
+		std::vector<SubTexture> subs;
 
 		Sandbox(Window* window): Application(window) {
 
@@ -46,18 +48,12 @@ class Sandbox: public Application {
 			e2.addComponent<SpriteComponent>(glm::vec3(0.0f));
 
 			Texture& texture2 = TextureManager::create("F:\\dev\\ClosedGL\\ClosedGL\\assets\\sprites\\Chayed's Free Pixels\\Game Boy\\Gameboy Tileset.png");
-			SubTexture sub = texture2.cutOut({ 0, 176, 16, 16 });
-			e2.addComponent<MeshComponent>(&sub);
-			
-			Entity& e3 = SceneManager::createEntity();
-			Body* body3 = mWorld.createBody();
-			body3->setPosition({ 5, 10 });
-			e3.addComponent<PhysicsComponent>(body3, &e3);
-			e3.addComponent<TransformComponent>(glm::mat4(1.0f));
-			e3.addComponent<SpriteComponent>(glm::vec3(0.0f));
-
-			Texture& texture3 = TextureManager::create("F:\\dev\\ClosedGL\\ClosedGL\\assets\\sprites\\Minecraft\\cobblestone.png");
-			e3.addComponent<MeshComponent>(&texture3);
+			//SubTexture& sub2 = TextureManager::crop(texture2, { 0, 172, 16, 16 });
+			subs = TextureManager::crop(texture2, { 
+				{ 0, 172, 16, 16 },
+				{ 0, 156, 16, 16 },
+			});
+			e2.addComponent<MeshComponent>(&subs[1]);
 
 			TextureManager::resident();
 
