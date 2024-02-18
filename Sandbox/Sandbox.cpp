@@ -51,7 +51,7 @@ class Sandbox: public Application {
 			//SubTexture& sub2 = TextureManager::crop(texture2, { 0, 172, 16, 16 });
 			subs = TextureManager::crop(texture2, { 
 				{ 0, 172, 16, 16 },
-				{ 0, 156, 16, 16 },
+				{ 0, 160, 16, 16 },
 			});
 			e2.addComponent<MeshComponent>(&subs[1]);
 
