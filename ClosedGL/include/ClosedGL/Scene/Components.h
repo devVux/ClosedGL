@@ -9,6 +9,7 @@
 #include "ClosedGL/Utils/Utils.h"
 
 class Entity;
+class Texture;
 
 struct TransformComponent {
 
@@ -43,6 +44,14 @@ struct PhysicsComponent {
 	Entity* entity;
 
 	PhysicsComponent(Body* b, Entity* e): body(b), entity(e) { }
+
+};
+
+struct MeshComponent {
+
+	Texture* texture;
+
+	MeshComponent(Texture* t): texture(t) { }
 
 };
 

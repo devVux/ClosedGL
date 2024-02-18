@@ -83,6 +83,10 @@ class IndexBuffer {
 		void insert(unsigned int* indices, unsigned int offset, unsigned int size);
 	
 		unsigned int count() const { return mCount; }
+		#ifdef _DEBUG
+			unsigned int* data() const { return pData; }
+		#endif
+
 		ID id() const { return mBufferId; }
 
 	private:

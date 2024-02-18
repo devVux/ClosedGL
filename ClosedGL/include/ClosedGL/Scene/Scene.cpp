@@ -8,19 +8,20 @@
 
 void Scene::update(Timestep ts) {
 
-	const auto& group = SceneManager::view<PhysicsComponent, TransformComponent, SpriteComponent>();
+	const auto& group = SceneManager::view<PhysicsComponent, TransformComponent, SpriteComponent, MeshComponent>();
 
 	for (auto entity : group) {
 
 		auto& p = group.get<PhysicsComponent>(entity);
 		auto& t = group.get<TransformComponent>(entity);
 		auto& s = group.get<SpriteComponent>(entity);
+		auto& m = group.get<MeshComponent>(entity);
 
 		auto& b = p.body;
 
 		t.setPosition(glm::vec2(b->position().x, b->position().y));
 
-		Renderer2D::drawQuad(t.transform, s.color);
+		Renderer2D::drawQuad(t.transform, *m.texture);
 
 	}
 

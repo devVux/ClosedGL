@@ -8,6 +8,8 @@
 
 #include "ClosedGL/Scene/OrthographicCamera.h"
 
+#include "ClosedGL/Renderer/Texture.h"
+
 namespace Renderer2D {
 
 	struct Stats {
@@ -21,8 +23,8 @@ namespace Renderer2D {
 
 	};
 
-	static constexpr unsigned int layoutSize = 8 + 12 + 8 + 4;	// pos + color + textCoord
-	static constexpr int BATCH_CAPACITY = 100;
+	static constexpr unsigned int layoutSize = 8 + 12 + 8;	// pos + color + textCoord
+	static constexpr int BATCH_CAPACITY = 10;
 	static constexpr int BATCH_INDICES = BATCH_CAPACITY * 6;
 	static constexpr int BATCH_DATA = BATCH_CAPACITY * layoutSize;
 
@@ -58,14 +60,12 @@ namespace Renderer2D {
 	void clear(float r = 0.2f, float g = 0.2f, float b = 0.2f);
 
 
-	// Todo: camera non va aggioranata altrove?
 	void beginScene(const OrthographicCamera& camera);
 	void endScene();
 
 	void drawQuad(glm::vec2 position, glm::vec2 size, glm::vec3 color = glm::vec3(1.0f));
-	void drawQuad(const glm::mat4& transform, glm::vec3 color = glm::vec3(1.0f));
+	void drawQuad(const glm::mat4& transform, const glm::vec3& color = glm::vec3(1.0f));
+	void drawQuad(const glm::mat4& transform, const Texture& texture, const glm::vec3& color = glm::vec3(1.0f));
 	void draw();
-
-	size_t assignTextureSlot(const Texture& texture);
 
 };
