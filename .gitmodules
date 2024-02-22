@@ -8,3 +8,9 @@
 	path = vendor/imgui
 	url = https://github.com/ocornut/imgui.git
 	branch = docking
+[submodule "vendor/imguiFileDialog"]
+	path = vendor/imguiFileDialog
+	url = https://github.com/aiekick/ImGuiFileDialog.git
+[submodule "vendor/dirent"]
+	path = vendor/dirent
+	url = https://github.com/tronkko/dirent.git
