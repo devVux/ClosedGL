@@ -30,7 +30,6 @@ void OrthographicCamera::update(Timestep ts) {
 	if (Input::isKeyDown(Keys::E))
 		mView = glm::rotate(mView, mSpeed * (float) ts, glm::vec3(0, 0, -mSpeed * ts));
 
-
 }
 
 void OrthographicCamera::onEvent(Event& e) {

@@ -38,6 +38,5 @@ layout(binding = 6, std430) readonly buffer ssbo3 {
 };
 
 void main() {
-    //fragColor = vec4(vTextIndex, vTextIndex, vTextIndex, 1.0); 
     fragColor = texture(textures[vTextIndex], vTextCoords) * vColor;
 }

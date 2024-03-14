@@ -1,5 +1,7 @@
 #pragma once
 
+#include "ClosedGL/Utils/Utils.h"
+
 class Texture;
 
 class SubTexture {
@@ -13,7 +15,6 @@ class SubTexture {
 
 		Coords coords() const { return mCoords; }
 
-
 	private:
 
 		Texture* pTexture;
@@ -26,7 +27,7 @@ class Texture {
 	public:
 
 		Texture(size_t index, uint32_t width = 1, uint32_t height = 1): 
-			mIndex(index), mWidth(width), mHeight(height) { }
+			mIndex((float) index), mWidth(width), mHeight(height) { }
 		~Texture();
 
 		void init();

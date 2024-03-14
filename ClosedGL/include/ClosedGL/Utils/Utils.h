@@ -1,5 +1,7 @@
 #pragma once
 
+
+
 struct MouseCoord {
 	float x;
 	float y;

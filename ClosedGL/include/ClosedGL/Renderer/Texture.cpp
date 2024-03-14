@@ -44,7 +44,7 @@ SubTexture Texture::cutOut(Coords coords) {
 //}
 
 void Texture::init() {
-	stbi_set_flip_vertically_on_load(1);
+	stbi_set_flip_vertically_on_load(0);
 
 	glCreateTextures(GL_TEXTURE_2D, 1, &mTextureID);
 	glBindTexture(GL_TEXTURE_2D, mTextureID);
@@ -62,7 +62,4 @@ void Texture::init() {
 
 bool operator==(const Texture& left, const Texture& right) { return left.mTextureID == right.mTextureID; }
 bool operator!=(const Texture& left, const Texture& right) { return !(left == right); }
-
-
-
 

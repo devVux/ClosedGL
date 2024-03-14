@@ -2,8 +2,6 @@
 
 #include <thread>
 #include "ClosedGL/Core/Application.h"
-#include <ClosedGL/Layers/View.h>
-#include <ClosedGL/Layers/Controller.h>
 #include "ClosedGL/Core/Input.h"
 
 extern Application* ClosedGL::create(Window* window);
@@ -18,16 +16,13 @@ int main() {
 	});
 
 	Window window(&eventHandler);
+	window.init();
 
 	GLFWInput* input = new GLFWInput(&window);
 	Input::setInputMode(input);
 
 	auto app = ClosedGL::create(&window);
-	View* view = new View(app);
-	view->init();
-	Controller* controller = new Controller(app, view);
 	eventHandler.registerListener(app);
-	app->init();
 
 	app->run();
 
@@ -35,8 +30,6 @@ int main() {
 	t.detach();
 	
 	delete app;
-	delete view;
-	delete controller;
 	delete input;
 
 	return 0;

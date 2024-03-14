@@ -7,6 +7,7 @@
 #include "ClosedGL/Scene/Scene.h"
 
 #include "ClosedGL/Scene/OrthographicCamera.h"
+#include "ClosedGL/Scene/PerspectiveCamera.h"
 
 #include "ClosedGL/Renderer/Texture.h"
 
@@ -23,10 +24,11 @@ namespace Renderer2D {
 
 	};
 
-	static constexpr unsigned int layoutSize = 8 + 12 + 8;	// pos + color + textCoord
-	static constexpr int BATCH_CAPACITY = 10;
-	static constexpr int BATCH_INDICES = BATCH_CAPACITY * 6;
-	static constexpr int BATCH_DATA = BATCH_CAPACITY * layoutSize;
+	static constexpr uint32_t layoutSize = 8 + 12 + 8 + 4;	// pos + color + textCoord
+	static constexpr uint32_t BATCH_CAPACITY = 10;
+	static constexpr uint32_t QUAD_INDICES = 6;
+	static constexpr uint32_t BATCH_INDICES = BATCH_CAPACITY * QUAD_INDICES;
+	static constexpr uint32_t BATCH_DATA = BATCH_CAPACITY * layoutSize;
 
 	struct Polygon {
 		float* data;
@@ -54,11 +56,10 @@ namespace Renderer2D {
 
 
 	void init();
-	
+	void invalidateSSBO();
 	void insert(const Polygon& p);
 
 	void clear(float r = 0.2f, float g = 0.2f, float b = 0.2f);
-
 
 	void beginScene(const OrthographicCamera& camera);
 	void endScene();

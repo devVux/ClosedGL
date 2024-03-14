@@ -15,7 +15,7 @@ class MouseButtonEvent: public Event {
 
 		MouseButtonEvent(int button): mButton(button) {}
 
-		NOTIFY_ALL()
+		EVENT_NOTIFY_ALL()
 
 	protected:
 
@@ -38,7 +38,7 @@ class MouseButtonPressedEvent: public MouseButtonEvent {
 
 		EVENT_TYPE(MouseButtonPressed)
 
-		NOTIFY_ALL()
+		EVENT_NOTIFY_ALL()
 
 };
 
@@ -56,7 +56,7 @@ class MouseButtonReleasedEvent: public MouseButtonEvent {
 
 		EVENT_TYPE(MouseButtonReleased)
 
-		NOTIFY_ALL()
+		EVENT_NOTIFY_ALL()
 
 };
 
@@ -80,7 +80,7 @@ class MouseMovedEvent: public Event {
 
 		EVENT_TYPE(MouseMoved)
 
-		NOTIFY_ALL()
+		EVENT_NOTIFY_ALL()
 
 	private:
 		
@@ -106,7 +106,7 @@ class MouseScrolledEvent: public Event {
 
 		EVENT_TYPE(MouseScrolled)
 		
-		NOTIFY_ALL()
+		EVENT_NOTIFY_ALL()
 
 	private:
 		

@@ -2,7 +2,12 @@
 
 #include "ClosedGL/Renderer/Texture.h"
 
-#include <array>
+#include "ClosedGL/Renderer/Renderer2D.h"
+
+#include <cassert>
+#include <vector>
+#include <glad/glad.h>
+#include "../Log.h"
 
 class TextureManager {
 
@@ -30,8 +35,12 @@ class TextureManager {
 			assert(handle != 0 && "Errore");
 
 			texture->setHandle(handle);
+			glMakeTextureHandleResidentARB(handle);
 
 			mTextures.push_back(texture);
+
+			Renderer2D::invalidateSSBO();
+
 			return *texture;
 		}
 		
@@ -44,11 +53,28 @@ class TextureManager {
 			assert(handle != 0 && "Errore");
 
 			texture->setHandle(handle);
-
+			glMakeTextureHandleResidentARB(handle);
 
 			mTextures.push_back(texture);
+
+			Renderer2D::invalidateSSBO();
+
 			return *texture;
 		}
+
+		static void remove(const Texture& texture) {
+			if (texture.index() == 0)
+				return;
+
+			const auto& it = std::find(std::begin(mTextures), std::end(mTextures), &texture);
+			mTextures.erase(it);
+			
+			Renderer2D::invalidateSSBO();
+		}
+		
+		//static void remove(const SubTexture& subTexture) {
+		//	std::remove(std::begin(mSubTextures), std::end(mSubTextures), subTexture);
+		//}
 
 		static SubTexture& crop(Texture& texture, const Coords& coords) {
 			SubTexture* subTexture = new SubTexture(&texture, coords);

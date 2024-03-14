@@ -39,7 +39,7 @@ class KeyPressedEvent: public KeyEvent {
 			return ss.str();
 		}
 
-		NOTIFY_ALL()
+		EVENT_NOTIFY_ALL()
 
 		EVENT_TYPE(KeyPressed)
 
@@ -57,7 +57,7 @@ class KeyReleasedEvent: public KeyEvent {
 			return ss.str();
 		}
 
-		NOTIFY_ALL()
+		EVENT_NOTIFY_ALL()
 
 		EVENT_TYPE(KeyReleased)
 
@@ -75,7 +75,7 @@ class KeyTypedEvent: public KeyEvent {
 			return ss.str();
 		}
 
-		NOTIFY_ALL()
+		EVENT_NOTIFY_ALL()
 
 		EVENT_TYPE(KeyTyped)
 

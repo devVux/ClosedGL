@@ -1,6 +1,7 @@
 #pragma once
 
 #include <memory>
+#include <cmath>
 #include "glm/glm.hpp"
 
 #include <Physiks/Body.h>
@@ -16,24 +17,51 @@ struct TransformComponent {
 
 	TransformComponent(const glm::mat4& t = glm::mat4(1.0f)): transform(t) { }
 
-	void translate(const glm::vec3& v) {
-		transform[3] += glm::vec4(v, 1.0f);
+	void translate(const glm::vec2& v) {
+		transform = glm::translate(glm::mat4(1.0f), { v.x, v.y, 1.0f });
 	}
 
-	void setPosition(const glm::vec2& v) {
-		transform[3] = glm::vec4(v, 0.0f, 1.0f);
+	void scale(const glm::vec2& v) {
+		transform = glm::scale(glm::mat4(1.0f), { v.x, v.y, 1.0f });
 	}
 
+	void rotate(float angle, const glm::vec2& axis) {
+		transform = glm::rotate(glm::mat4(1.0f), angle, { axis.x, axis.y, 0.0f });
+	}
+
+
+	
 	operator glm::mat4() { return transform; }
 	operator const glm::mat4& () const { return transform; }
+
+	static std::string type() { return "Transform"; }
 
 };
 
 struct SpriteComponent {
 
+	Texture* texture { nullptr };
+	Coords coords;
 	glm::vec3 color;
 
 	SpriteComponent(const glm::vec3& c = glm::vec3(1.0f)): color(c) { }
+	SpriteComponent(Texture* t, const glm::vec3& c = glm::vec3(1.0f)): texture(t), color(c) {
+		if (t != nullptr)
+			coords = { 0, 0, t->width(), t->height() };
+	}
+	SpriteComponent(SubTexture* t, const glm::vec3& c = glm::vec3(1.0f)): texture(t->texture()) {
+		if (t != nullptr)
+			coords = { 0, 0, t->texture()->width(), t->texture()->height() };
+	}
+
+	void addTexture(Texture* t) {
+		texture = t;
+		coords = { 0.0f, 0.0f, t->width(), t->height() };
+	}
+
+	operator const Texture&() const { return *texture; }
+
+	static std::string type() { return "Sprite"; }
 
 };
 
@@ -44,19 +72,10 @@ struct PhysicsComponent {
 
 	PhysicsComponent(Body* b, Entity* e): body(b), entity(e) { }
 
-};
-
-struct MeshComponent {
-
-	Texture* texture;
-	Coords coords;
-
-	MeshComponent(Texture* t): texture(t), coords({ 0, 0, t->width(), t->height() }) { }
-	MeshComponent(SubTexture* t): texture(t->texture()), coords(t->coords()) { }
-
-	operator const Texture&() const { return *texture; }
+	static std::string type() { return "Physics"; }
 
 };
+
 
 struct MotionComponent {
 
@@ -64,6 +83,7 @@ struct MotionComponent {
 	float speed;
 	bool loop;
 
+	MotionComponent() = default;
 	MotionComponent(Body* b, const Vec2& targetPos, bool doLoop = false, float s = 1.0f): body(b), to(targetPos), loop(doLoop), from(body->position()), speed(s) {
 
 
@@ -88,14 +108,16 @@ struct MotionComponent {
 		}
 
 
-		float x = std::lerp(from.x, to.x, (float) t);
-		float y = std::lerp(from.y, to.y, (float) t);
+		//float x = std::lerp(from.x, to.x, (float) t);
+		//float y = std::lerp(from.y, to.y, (float) t);
 
-		body->setPosition({ x, y });
+		//body->setPosition({ x, y });
 
 		oldTs = ts;
 
 	}
+
+	static std::string type() { return "Motion"; }
 
 	private:
 

@@ -13,13 +13,15 @@ class Entity {
 		inline void addComponent(Args&&... args) {
 			mHandle.emplace<T>(std::forward<Args>(args)...);
 		}
-
+		
 		template <class T>
-		inline bool hasComponent() {
-			return mHandle.try_get<T>();
+		inline void removeComponent() {
+			mHandle.erase<T>();
 		}
 
 		int entityID() const { return (int) mHandle.entity(); }
+
+		bool operator==(const Entity& other) const { return entityID() == other.entityID(); }
 
 	private:
 

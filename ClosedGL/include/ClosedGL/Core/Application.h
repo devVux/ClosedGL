@@ -3,15 +3,15 @@
 #include "Window.h"
 #include "ClosedGL/Events/Event.h"
 
-#include "ClosedGL/Renderer/Renderer.h"
 #include "ClosedGL/Scene/Scene.h"
 
 #include <Physiks/World.h>
 
-#include "ClosedGL/Utils/Observer.h"
 #include <algorithm>
 
-class Application: public EventListener, public Subject {
+#include "ClosedGL/Scene/PerspectiveCamera.h"
+
+class Application: public EventListener {
 
 	public:
 
@@ -43,14 +43,9 @@ class Application: public EventListener, public Subject {
 		void onEvent(Event& e) override;
 
 
-		virtual void notify() override {
-			std::for_each(std::begin(mObservers), std::end(mObservers), [](Observer* observer) {
-				observer->update();
-			});
-		}
-
 		GLFWwindow* nativeWindow() const { return pWindow->native(); }
-
+		bool isRunning() const { return mRunning; }
+		void stop() { mRunning = false; }
 	private:
 
 		Window* pWindow;
@@ -63,7 +58,6 @@ class Application: public EventListener, public Subject {
 	protected:
 
 		World mWorld;
-		OrthographicCamera mCamera;
 	
 
 	private:

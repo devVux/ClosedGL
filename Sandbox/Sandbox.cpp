@@ -1,20 +1,7 @@
 #pragma once
 #include <ClosedGL.h>
 
-#include "ClosedGL/Scene/OrthographicCamera.h"
-
-#include "ClosedGL/Renderer/Texture.h"
-#include "ClosedGL/Scene/Components.h"
-
-#include "ClosedGL/Scene/Entity.h"
-
 #include <random>
-
-#include "ClosedGL/Events/KeyEvents.h"
-
-#include "ClosedGL/Core/Managers/SceneManager.h"
-#include "ClosedGL/Core/Managers/TextureManager.h"
-#include "ClosedGL/Core/Window.h"
 
 static std::random_device dev;
 static std::mt19937 rng(dev());
@@ -30,32 +17,16 @@ class Sandbox: public Application {
 
 		Sandbox(Window* window): Application(window) {
 
+			Application::init();
+			
 			Entity& e = SceneManager::createEntity();
-			Body* body = mWorld.createBody();
-
-			e.addComponent<PhysicsComponent>(body, &e);
 			e.addComponent<TransformComponent>(glm::mat4(2.0f));
-			e.addComponent<SpriteComponent>(glm::vec3(0.0f));
-
-			Texture& texture = TextureManager::create("F:\\dev\\ClosedGL\\ClosedGL\\assets\\sprites\\Minecraft\\wood.png");
-			e.addComponent<MeshComponent>(&texture);
+			Texture& texture = TextureManager::create("F:\\dev\\ClosedGL\\ClosedGL\\assets\\sprites\\Minecraft\\glass.png");
+			e.addComponent<SpriteComponent>(&texture, glm::vec3(0.0f));
 
 			Entity& e2 = SceneManager::createEntity();
-			Body* body2 = mWorld.createBody();
-			body2->setPosition({ 10, 5 });
-			e2.addComponent<PhysicsComponent>(body2, &e2);
-			e2.addComponent<TransformComponent>(glm::mat4(1.0f));
-			e2.addComponent<SpriteComponent>(glm::vec3(0.0f));
-
-			Texture& texture2 = TextureManager::create("F:\\dev\\ClosedGL\\ClosedGL\\assets\\sprites\\Chayed's Free Pixels\\Game Boy\\Gameboy Tileset.png");
-			//SubTexture& sub2 = TextureManager::crop(texture2, { 0, 172, 16, 16 });
-			subs = TextureManager::crop(texture2, { 
-				{ 0, 172, 16, 16 },
-				{ 0, 160, 16, 16 },
-			});
-			e2.addComponent<MeshComponent>(&subs[1]);
-
-			TextureManager::resident();
+			e2.addComponent<TransformComponent>(glm::translate(glm::mat4(1.0f), { 2.0f, 2.0f, 0.0f }));
+			e2.addComponent<SpriteComponent>(glm::vec3(0.6f));
 
 		}
 

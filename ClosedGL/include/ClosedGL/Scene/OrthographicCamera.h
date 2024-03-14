@@ -1,6 +1,6 @@
 #pragma once
 
-#include <glm/glm.hpp>
+#include <glm/ext/matrix_transform.hpp>
 
 #include "ClosedGL/Core/Clock.h"
 #include "ClosedGL/Utils/Utils.h"

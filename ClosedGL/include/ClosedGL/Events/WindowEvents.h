@@ -8,7 +8,7 @@ class WindowCloseEvent: public Event {
 
 	public:
 	
-		NOTIFY_ALL()
+		EVENT_NOTIFY_ALL()
 
 		EVENT_TYPE(WindowClosed)
 		
@@ -25,11 +25,11 @@ class WindowResizeEvent: public Event {
 
 		virtual std::string toString() const override {
 			std::stringstream ss;
-			ss << "WindowResizeEvent: " << mWidth << 'x' << mHeight;
+			ss << "WindowResizeEvent: " << mWidth << " x " << mHeight;
 			return ss.str();
 		}
 		
-		NOTIFY_ALL()
+		EVENT_NOTIFY_ALL()
 
 		EVENT_TYPE(WindowResized)
 

@@ -17,7 +17,6 @@ namespace Renderer2D {
 		
 		unsigned int mCurrentPos = 0;
 
-		Scene scene;
 
 		~RendererStorage() {
 			delete pShader;
@@ -39,7 +38,7 @@ namespace Renderer2D {
 	
 	void init() {
 
-	   // Batch init
+		// Batch init
 		storage.pVertexArray = new VertexArray;
 		storage.pVertexArray->bind();
 
@@ -65,15 +64,6 @@ namespace Renderer2D {
 		storage.pShader->bind();
 
 
-		glCreateBuffers(1, &storage.ssbo);
-		glNamedBufferStorage(
-			storage.ssbo,
-			sizeof(uint64_t) * TextureManager::size(),
-			(const void*) TextureManager::handles().data(),
-			GL_DYNAMIC_STORAGE_BIT
-		);
-
-
 		uint32_t indices[BATCH_INDICES];
 
 		uint32_t offset = 0;
@@ -93,12 +83,28 @@ namespace Renderer2D {
 
 		storage.pIndexBuffer->push(indices, BATCH_INDICES * sizeof(uint32_t));
 
+
+	}
+
+	// TODO: when a texture gets deleted, do i need to invalidate the buffer?
+	void invalidateSSBO() {
+		TRACE("ssbo size {}", TextureManager::size());
+		glDeleteBuffers(1, &storage.ssbo);
+		glCreateBuffers(1, &storage.ssbo);
+		glNamedBufferStorage(
+			storage.ssbo,
+			sizeof(uint64_t) * TextureManager::size(),
+			(const void*) TextureManager::handles().data(),
+			GL_DYNAMIC_STORAGE_BIT
+		);
 	}
 
 	void insert(const Polygon& p) {
 
-		if (storage.mCurrentPos + p.count > BATCH_CAPACITY * layoutSize)
+		if (storage.mCurrentPos + p.count > BATCH_CAPACITY * layoutSize) {
+			draw();
 			storage.mCurrentPos = 0;
+		}
 
 		storage.pBuffer->insert(p.data, storage.mCurrentPos * sizeof(float), p.count * sizeof(float));
 		storage.mCurrentPos += p.count;
@@ -111,7 +117,7 @@ namespace Renderer2D {
 	}
 
 	void beginScene(const OrthographicCamera& camera) {
-
+			
 		storage.pShader->bind();
 		storage.pShader->setUniformMatrix4("uProj", camera.projection());
 		storage.pShader->setUniformMatrix4("uView", camera.view());
@@ -125,20 +131,32 @@ namespace Renderer2D {
 
 	void endScene() {
 		draw();
+		Renderer2D::Stats::drawCalls++;
+
+		//glBindFramebuffer(GL_READ_FRAMEBUFFER, storage.pFrameBuffer->id());
+		//glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
+
+		//glBlitFramebuffer(
+		//	0, 0, storage.pFrameBuffer->width(), storage.pFrameBuffer->height(),
+		//	0, 0, 500, 500,
+		//	GL_COLOR_BUFFER_BIT, GL_NEAREST
+		//);
+
+		//glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+
 	}
 
 	void drawQuad(glm::vec2 position, glm::vec2 size, glm::vec3 color) {
 
-		glm::mat4 transform = glm::translate(glm::mat4(1.0f), glm::vec3(position, 0.0f)) *
-			glm::scale(glm::mat4(1.0f), glm::vec3(size, 1.0f));
+		glm::mat4 transform = glm::translate(
+			glm::scale(
+				glm::mat4(1.0f), 
+				glm::vec3(size, 0.0f)
+			), 
+			glm::vec3(position, 0.0f)
+		);
 
-		//Polygon quad {
-		//	{ position.x,			position.y,				1.0f, 1.0f, 1.0f,  1.0f, 0.0f, 0.0f },
-		//	{ position.x + size.x,	position.y,				1.0f, 1.0f, 1.0f,  0.0f, 0.0f, 0.0f },
-		//	{ position.x + size.x,	position.y + size.y,	1.0f, 1.0f, 1.0f,  1.0f, 1.0f, 0.0f },
-		//	{ position.x,			position.y + size.y,	1.0f, 1.0f, 1.0f,  0.0f, 1.0f, 0.0f },
-		//};
-		
 		drawQuad(transform, color);
 
 	}
@@ -150,14 +168,14 @@ namespace Renderer2D {
 		const glm::vec4 b = transform * VerticesDisposition::b;
 		const glm::vec4 c = transform * VerticesDisposition::c;
 		const glm::vec4 d = transform * VerticesDisposition::d;
-
+	
 		const float id = 0;
 
 		Polygon quad {
-			{ a[0],	a[1],	color.r, color.g, color.b,  1.0f, 0.0f, 0.0f,	id },
-			{ b[0],	b[1],	color.r, color.g, color.b,  0.0f, 0.0f, 0.0f,	id },
-			{ c[0],	c[1],	color.r, color.g, color.b,  1.0f, 1.0f, 0.0f,	id },
-			{ d[0],	d[1],	color.r, color.g, color.b,  0.0f, 1.0f, 0.0f,	id },
+			{ a[0],	a[1],	color.r, color.g, color.b,  0.0f, 0.0f,		id },
+			{ b[0],	b[1],	color.r, color.g, color.b,  1.0f, 0.0f,		id },
+			{ c[0],	c[1],	color.r, color.g, color.b,  1.0f, 1.0f,		id },
+			{ d[0],	d[1],	color.r, color.g, color.b,  0.0f, 1.0f,		id },
 		};
 
 		Renderer2D::insert(quad);
@@ -191,19 +209,17 @@ namespace Renderer2D {
 	}
 
 	void draw() {
-
+		
 		storage.pVertexArray->bind();
 		storage.pIndexBuffer->bind();
 		glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 6, storage.ssbo);
 		
 		glDrawElements(
 			GL_TRIANGLES,
-			storage.pIndexBuffer->count(),
+			std::min<const uint32_t>(BATCH_CAPACITY, Stats::polyCount) * QUAD_INDICES,
 			GL_UNSIGNED_INT,
 			0
 		);
-
-		Renderer2D::Stats::drawCalls++;
 
 	}
 

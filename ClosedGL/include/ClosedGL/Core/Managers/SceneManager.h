@@ -21,7 +21,7 @@ class SceneManager {
 		}
 
 		template <class T>
-		static T get(const Entity& entity) {
+		static T* get(const Entity& entity) {
 			return mRegistry.try_get<T>((entt::entity) entity.entityID());
 		}
 
@@ -35,6 +35,17 @@ class SceneManager {
 			return mRegistry.view<T, U...>();
 		}
 
+		template <class T, class ...U>
+		static bool hasComponent(const Entity& entity) {
+			return mRegistry.any_of<T, U...>((entt::entity) entity.entityID());
+		}
+
+		template <class T, class ...U>
+		static bool hasComponent(const entt::entity& entity) {
+			return mRegistry.any_of<T, U...>(entity);
+		}
+
+		static const entt::registry& registry() { return mRegistry; }
 
 	private:
 

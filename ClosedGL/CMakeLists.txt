@@ -22,10 +22,6 @@ find_package(stb REQUIRED)
 
 enable_testing()
 include_directories(
-	"${CMAKE_SOURCE_DIR}/vendor/Physiks/include"
-	"${CMAKE_SOURCE_DIR}/vendor/imgui"
-)
-include_directories(
     "${PROJECT_SOURCE_DIR}/test"
     "${PROJECT_SOURCE_DIR}/include"
     "${PROJECT_SOURCE_DIR}/include/ClosedGL"
@@ -52,10 +48,6 @@ set(SOURCES
 
 	"include/ClosedGL/Layers/LayerStack.cpp"
 
-	"include/ClosedGL/Layers/ImGuiController.cpp"
-	"include/ClosedGL/Layers/View.cpp"
-	"include/ClosedGL/Layers/Controller.cpp"
-
 	"include/ClosedGL/Renderer/Buffer.cpp"
 	"include/ClosedGL/Renderer/Renderer2D.cpp"
 	"include/ClosedGL/Renderer/Shader.cpp"
@@ -70,29 +62,11 @@ set(SOURCES
 
 add_library(${STATICLIB} STATIC ${SOURCES})
 
-
-set(IMGUI_SOURCE_DIR "${CMAKE_SOURCE_DIR}/vendor/imgui")
-add_library(ImGui STATIC
-    "${IMGUI_SOURCE_DIR}/imgui.cpp"
-    "${IMGUI_SOURCE_DIR}/imgui_demo.cpp"
-    "${IMGUI_SOURCE_DIR}/imgui_draw.cpp"
-    "${IMGUI_SOURCE_DIR}/imgui_tables.cpp"
-    "${IMGUI_SOURCE_DIR}/imgui_widgets.cpp"
-
-    "${IMGUI_SOURCE_DIR}/backends/imgui_impl_opengl3.cpp"
-    "${IMGUI_SOURCE_DIR}/backends/imgui_impl_glfw.cpp"
-)
-target_include_directories(${STATICLIB} PUBLIC ${IMGUI_SOURCE_DIR})
-target_link_libraries(ImGui PUBLIC glfw)
-
-
-
 target_link_directories(${STATICLIB} PRIVATE ${Stb_INCLUDE_DIR})
 target_link_libraries(${STATICLIB} PUBLIC spdlog::spdlog)
 target_link_libraries(${STATICLIB} PUBLIC glfw)
 target_link_libraries(${STATICLIB} PUBLIC glad::glad)
 target_link_libraries(${STATICLIB} PUBLIC glm::glm)
-target_link_libraries(${STATICLIB} PUBLIC ImGui)
 target_link_libraries(${STATICLIB} PUBLIC EnTT::EnTT)
 target_link_libraries(${STATICLIB} PRIVATE PhysiksStatic) 
 target_link_libraries(${STATICLIB} PRIVATE GTest::gtest_main)

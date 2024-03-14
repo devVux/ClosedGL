@@ -100,11 +100,67 @@ void VertexArray::addBuffer(const VertexBuffer& vertexBuffer) {
 	vertexBuffer.bind();
 
 	unsigned int offset = 0;
-	for (size_t i = 0; i < layout.elements().size(); i++) {
+	for (GLuint i = 0; i < layout.elements().size(); i++) {
 		const VertexBufferElement& element = layout.elements().at(i);
 		glVertexAttribPointer(i, element.count, element.type, GL_FALSE, layout.stride(), (void*) offset);
 		glEnableVertexAttribArray(i);
 		offset += element.count * VertexBufferElement::size(element.type);
 	}
+
+}
+
+FrameBuffer::FrameBuffer() {
+	invalidate();
+}
+
+FrameBuffer::~FrameBuffer() {
+	glDeleteFramebuffers(1, &mBufferID);
+	glDeleteTextures(1, &mColorAttachment);
+	glDeleteTextures(1, &mDepthAttachment);
+}
+
+void FrameBuffer::bind() {
+	glBindFramebuffer(GL_FRAMEBUFFER, mBufferID);
+}
+
+void FrameBuffer::unbind() {
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+}
+
+void FrameBuffer::invalidate() {
+	
+	if (mBufferID != 0) {
+		glDeleteFramebuffers(1, &mBufferID);
+		glDeleteTextures(1, &mColorAttachment);
+		glDeleteTextures(1, &mDepthAttachment);
+	}
+
+
+	glCreateFramebuffers(1, &mBufferID);
+	glBindFramebuffer(GL_FRAMEBUFFER, mBufferID);
+
+
+	// Color attachment
+	glCreateTextures(GL_TEXTURE_2D, 1, &mColorAttachment);
+	glBindTexture(GL_TEXTURE_2D, mColorAttachment);
+
+	glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA8, (uint32_t) mSize.x, (uint32_t) mSize.y);
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, mColorAttachment, 0);
+
+
+	// Depth attachment
+	glCreateTextures(GL_TEXTURE_2D, 1, &mDepthAttachment);
+	glBindTexture(GL_TEXTURE_2D, mDepthAttachment);
+
+	glTexStorage2D(GL_TEXTURE_2D, 1, GL_DEPTH24_STENCIL8, (uint32_t) (uint32_t) mSize.x, (uint32_t) mSize.y);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_TEXTURE_2D, mDepthAttachment, 0);
+
+
+	assert(glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE && "Framebuffer is incomplete!");
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
 }

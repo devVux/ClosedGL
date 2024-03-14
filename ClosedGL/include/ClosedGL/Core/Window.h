@@ -24,6 +24,7 @@ class Window {
 		void swapBuffers();
 
 		GLFWwindow* native() const { return pWindow; }
+		WindowProps properties() const { return mProps; }
 
 	private:
 

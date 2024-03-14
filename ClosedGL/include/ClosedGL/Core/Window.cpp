@@ -46,9 +46,9 @@ void Window::init() {
 	});
 
 	glfwSetWindowSizeCallback(pWindow, [](GLFWwindow* window, int w, int h) {
-		//const auto& eventHandler = (EventHandler*) glfwGetWindowUserPointer(window);
-		//	eventHandler->push(new WindowResizeEvent(w, h));
 		glViewport(0, 0, w, h);
+		const auto& eventHandler = (EventHandler*) glfwGetWindowUserPointer(window);
+		eventHandler->push(new WindowResizeEvent(w, h));
 	});
 
 	glfwSetKeyCallback(pWindow, [](GLFWwindow* window, int keyCode, int scancode, int action, int mode) {

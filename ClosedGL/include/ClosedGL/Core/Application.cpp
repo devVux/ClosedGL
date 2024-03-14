@@ -7,8 +7,7 @@
 #include "ClosedGL/Core/Input.h"
 
 #include "ClosedGL/Renderer/Renderer2D.h"
-
-#include "ClosedGL/Layers/StatsLayer.h"
+#include "ClosedGL/Core/Managers/TextureManager.h"
 
 static void MessageCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar * message, const void* userParam) {
 	if (severity != GL_DEBUG_SEVERITY_NOTIFICATION)
@@ -29,8 +28,6 @@ Application::Application(Window* window): pWindow(window) {
 
 	sInstance = this;
 	
-	pWindow->init();
-
 }
 
 void Application::init() {
@@ -46,9 +43,12 @@ void Application::init() {
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
+	TextureManager::create();
+
 	Renderer2D::init();
 
 }
+static OrthographicCamera camera;
 
 void Application::run() {
 
@@ -56,12 +56,11 @@ void Application::run() {
 	Clock clock;
 	Timestep accumulator = 0;
 
-	Stats::updates = 1 / clock.tickInterval() + 1;
-
+	Stats::updates = (uint32_t) 1 / clock.tickInterval() + 1;
+	
 	while (mRunning) {
 
 		pWindow->pollEvents();
-
 		Timestep ts = clock.tick();
 		Time::delta = ts;
 		accumulator += ts;
@@ -79,13 +78,13 @@ void Application::run() {
 }
 
 void Application::render(Timestep ts) {
+	camera.update(ts);
+	
 	Renderer2D::clear();
-	Renderer2D::beginScene(mCamera);
-	mCamera.update(ts);
+	Renderer2D::beginScene(camera);
 	mScene.update(ts);
 	Renderer2D::endScene();
 
-	notify();
 	pWindow->swapBuffers();
 }
 

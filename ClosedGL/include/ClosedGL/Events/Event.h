@@ -14,7 +14,7 @@ enum class EventType {
 #define EVENT_TYPE(x)	static EventType staticType() { return EventType::x; } \
 						virtual std::string name() const override { return #x; } \
 						virtual EventType type() const { return EventType::x; }
-#define NOTIFY_ALL() virtual void notifyAll() { for (EventListener* listener : mListeners) listener->onEvent(*this); }
+#define EVENT_NOTIFY_ALL() virtual void notifyAll() { for (EventListener* listener : mListeners) listener->onEvent(*this); }
 
 class Event;
 

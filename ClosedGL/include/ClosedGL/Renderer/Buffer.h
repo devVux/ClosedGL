@@ -2,7 +2,8 @@
 
 typedef unsigned int ID;
 
-#include "pch.h"
+#include <glad/glad.h>
+#include <glm/glm.hpp>
 
 #include <vector>
 
@@ -55,6 +56,8 @@ class VertexBuffer {
 		void push(float* vertices, unsigned int size, GLenum mode = GL_STATIC_DRAW) const;
 		void insert(float* vertices, unsigned int offset, unsigned int size) const;
 		
+		void clear();
+
 		void setLayout(const BufferLayout& layout) { mLayout = layout; }
 		BufferLayout layout() const { return mLayout; }
 
@@ -81,7 +84,7 @@ class IndexBuffer {
 
 		void push(unsigned int* indices, unsigned int size, GLenum mode = GL_STATIC_DRAW);
 		void insert(unsigned int* indices, unsigned int offset, unsigned int size);
-	
+
 		unsigned int count() const { return mCount; }
 		#ifdef _DEBUG
 			unsigned int* data() const { return pData; }
@@ -127,5 +130,41 @@ class VertexArray {
 		ID mArrayId;
 
 		IndexBuffer* mIndexBuffer;
+
+};
+
+
+class FrameBuffer {
+
+	public:
+
+		FrameBuffer();
+		~FrameBuffer();
+
+		void bind();
+		void unbind();
+
+		void invalidate();
+
+		ID id() const { return mBufferID; }
+		glm::vec2 size() const { return mSize; }
+		float width() const { return mSize.x; }
+		float height() const { return mSize.y; }
+
+		void resize(glm::vec2 size) {
+			mSize = size;
+			invalidate();
+		}
+
+		uint32_t colorAttachment() const { return mColorAttachment; }
+
+	private:
+
+		ID mBufferID { 0 };
+
+		glm::vec2 mSize { 1, 1 };
+
+		uint32_t mColorAttachment;
+		uint32_t mDepthAttachment;
 
 };

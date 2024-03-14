@@ -20,9 +20,9 @@ void PerspectiveCamera::update(Timestep ts) {
 			mView = glm::translate(mView, glm::vec3(0, 0, -mSpeed * ts));
 
 		if (Input::isKeyDown(Keys::A))
-			mView = glm::translate(mView, glm::vec3(mSpeed * ts, 0, 0));
+			mView = glm::translate(mView, glm::vec3(mSpeed, 0, 0));
 		if (Input::isKeyDown(Keys::D))
-			mView = glm::translate(mView, glm::vec3(-mSpeed * ts, 0, 0));
+			mView = glm::translate(mView, glm::vec3(-mSpeed, 0, 0));
 
 		if (Input::isKeyDown(Keys::Q))
 			mView = glm::rotate(mView, mSpeed * (float) ts, glm::vec3(0, mSpeed * ts, 0));
