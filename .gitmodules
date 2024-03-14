@@ -11,9 +11,6 @@
 [submodule "vendor/imguiFileDialog"]
 	path = vendor/imguiFileDialog
 	url = https://github.com/aiekick/ImGuiFileDialog.git
-[submodule "vendor/dirent"]
-	path = vendor/dirent
-	url = https://github.com/tronkko/dirent.git
 [submodule "vendor/ImGuiIcons"]
 	path = vendor/ImGuiIcons
 	url = https://github.com/juliettef/IconFontCppHeaders
