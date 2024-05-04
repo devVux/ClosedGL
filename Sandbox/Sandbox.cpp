@@ -55,8 +55,6 @@ class Sandbox: public Application {
 			});
 			e2.addComponent<MeshComponent>(&subs[1]);
 
-			TextureManager::resident();
-
 		}
 
 		virtual ~Sandbox() {

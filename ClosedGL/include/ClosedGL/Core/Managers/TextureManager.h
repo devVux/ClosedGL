@@ -18,33 +18,23 @@ class TextureManager {
 				mSubTextures.pop_back();
 			}
 		}
-
-		static Texture& create() {
-			Texture* texture = new Texture(mTextures.size());
-			texture->init();
-
-			uint32_t white = 0xffffffff;
-			texture->setData(&white);
-
-			uint64_t handle = glGetTextureHandleARB(texture->id());
-			assert(handle != 0 && "Errore");
-
-			texture->setHandle(handle);
-
-			mTextures.push_back(texture);
-			return *texture;
-		}
 		
-		static Texture& create(const std::string& path) {
+		static Texture& create(std::optional<std::string> path) {
 			Texture* texture = new Texture(mTextures.size());
 			texture->init();
-			texture->load(path);
+
+			if (path)
+				texture->load(path.value());
+			else {
+				uint32_t white = 0xffffffff;
+				texture->setData(&white);
+			}
 
 			uint64_t handle = glGetTextureHandleARB(texture->id());
 			assert(handle != 0 && "Errore");
 
 			texture->setHandle(handle);
-
+			glMakeTextureHandleResidentARB(handle);
 
 			mTextures.push_back(texture);
 			return *texture;

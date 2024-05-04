@@ -4,7 +4,8 @@
 #include "ClosedGL/Core/Application.h"
 #include <ClosedGL/Layers/View.h>
 #include <ClosedGL/Layers/Controller.h>
-#include "ClosedGL/Core/Input.h"
+#include <ClosedGL/Core/Input.h>
+#include <ClosedGL/Core/Managers/TextureManager.h>
 
 extern Application* ClosedGL::create(Window* window);
 
@@ -23,6 +24,8 @@ int main() {
 	Input::setInputMode(input);
 
 	auto app = ClosedGL::create(&window);
+	TextureManager::create({});
+
 	View* view = new View(app);
 	view->init();
 	Controller* controller = new Controller(app, view);
