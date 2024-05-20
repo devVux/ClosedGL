@@ -19,6 +19,7 @@ find_package(glfw3 REQUIRED)
 find_package(glm REQUIRED)
 find_package(EnTT REQUIRED)
 find_package(stb REQUIRED)
+find_package(box2d REQUIRED)
 
 enable_testing()
 include_directories(
@@ -96,6 +97,7 @@ target_link_libraries(${STATICLIB} PUBLIC ImGui)
 target_link_libraries(${STATICLIB} PUBLIC EnTT::EnTT)
 target_link_libraries(${STATICLIB} PRIVATE PhysiksStatic) 
 target_link_libraries(${STATICLIB} PRIVATE GTest::gtest_main)
+target_link_libraries(${STATICLIB} PRIVATE box2d::box2d)
 
 add_executable(${PROJECT_NAME} ${SOURCES})
 target_link_libraries(${PROJECT_NAME} PUBLIC ${STATICLIB})
