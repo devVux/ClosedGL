@@ -1,16 +1,18 @@
 {
-		"name": "closed-gl",
-		"version-string": "0.0.1",
-		"dependencies": [
-				{
-					"name": "glad",
-					"features": ["gl-api-latest", "extensions"]
-				},
-				"spdlog",
-				"glfw3",
-				"glm",
-				"entt",
-				"stb",
-				"gtest"
-		]
+	"dependencies": [
+		"entt",
+		{
+			"name": "glad",
+			"features": [
+				"extensions",
+				"gl-api-latest"
+			]
+		},
+		"glfw3",
+		"glm",
+		"gtest",
+		"spdlog",
+		"stb",
+		"box2d"
+	]
 }

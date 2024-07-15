@@ -3,6 +3,7 @@
 #include "ClosedGL/Layers/Layer.h"
 
 #include "ClosedGL/Core/Application.h"
+#include "ClosedGL/Renderer/RenderCommands.h"
 #include "ClosedGL/Renderer/Renderer2D.h"
 
 #include "ClosedGL/Core/Clock.h"
@@ -18,7 +19,7 @@ class StatsLayer: public Layer, public Subject {
 
 		StatsLayer() {
 			t.every(1s, [](float& frames) {
-				frames = 1.0f / Time::delta;
+				frames = (float) (1.0f / Time::delta);
 			}, fps);
 		}
 
@@ -29,22 +30,18 @@ class StatsLayer: public Layer, public Subject {
 			ImGui::Text("FPS %.2f", fps);
 			//ImGui::Text("Fixed Updates %u", Application::Stats::updates);
 
-			ImGui::Text("Draw calls: %u", Renderer2D::Stats::drawCalls);
-			ImGui::Text("Polygons: %u", Renderer2D::Stats::polyCount);
+			ImGui::Text("Draw calls: %u", RenderCommands::Stats::drawCalls.load());
+			ImGui::Text("Polygons: %u", RenderCommands::Stats::polyCount.load());
 
 			ImGui::End();
 
 		}
 
-		virtual void notify() override {
-			std::for_each(std::begin(mObservers), std::end(mObservers), [](Observer* observer) {
-				observer->update();
-				});
-		}
+		NOTIFY
 
 	private:
 
-		Timer t;
+		Time::Timer t;
 		float fps { 0 };
 
 };

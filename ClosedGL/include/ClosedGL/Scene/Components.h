@@ -3,12 +3,13 @@
 #include <memory>
 #include "glm/glm.hpp"
 
-#include <Physiks/Body.h>
 #include "ClosedGL/Core/Clock.h"
 #include "ClosedGL/Scene/Entity.h"
 #include "ClosedGL/Utils/Utils.h"
 
 #include "ClosedGL/Renderer/Texture.h"
+
+#include <box2d/b2_body.h>
 
 struct TransformComponent {
 
@@ -39,13 +40,13 @@ struct SpriteComponent {
 
 struct PhysicsComponent {
 
-	Body* body;
-	Entity* entity;
+	b2Body* body;
 
-	PhysicsComponent(Body* b, Entity* e): body(b), entity(e) { }
+	PhysicsComponent(b2Body* b): body(b) { }
 
 };
 
+/*
 struct MeshComponent {
 
 	Texture* texture;
@@ -107,3 +108,4 @@ struct MotionComponent {
 		bool reverse { false };
 
 };
+*/

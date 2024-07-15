@@ -1,7 +1,7 @@
 #pragma once
 
 #include <vector>
-#include <algorithm>
+#include <memory>
 
 class Observer {
 	
@@ -28,3 +28,9 @@ class Subject {
 		std::vector<Observer*> mObservers;
 
 };
+
+#define NOTIFY \
+	virtual void notify() override { \
+		for (auto observer : mObservers) \
+				observer->update(); \
+		}

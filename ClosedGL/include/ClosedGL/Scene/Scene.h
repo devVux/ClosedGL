@@ -1,34 +1,47 @@
 #pragma once
 
 #include "ClosedGL/Core/Clock.h"
-#include "ClosedGL/Scene/OrthographicCamera.h"
+#include "ClosedGL/Scene/Entity.h"
 
-#include "Entity.h"
 #include <entt/entt.hpp>
+#include "ClosedGL./Utils/Utils.h"
 
-#include <memory>
 
 class Scene {
-	
+
 	public:
+
+		void update(Timestep ts) const;
 		
-		void beginScene(const OrthographicCamera& camera);
-
-		std::shared_ptr<Entity> createEntity();
-
-		template <class T>
-		T& get(const Entity& entity) {
-			return *mRegistry.try_get<T>((entt::entity) entity.entityID());
+		Ref<Entity> createEntity() {
+			Ref<Entity> e = makeRef<Entity>(mRegistry, mRegistry.create());
+			mEntities.push_back(e);
+			return e;
 		}
 
-		void update(Timestep ts);
-		void updatePhysics(Timestep ts);
+		template <class T>
+		T get(const Entity& entity) {
+			return mRegistry.try_get<T>((entt::entity) entity.entityID());
+		}
+
+
+		bool operator==(const Scene& other) const {
+			if (other.mEntities.size() != mEntities.size())
+				return false;
+
+			for (size_t i = 0; i < mEntities.size(); i++)
+				if (*mEntities[i] != *other.mEntities[i])
+					return false;
+
+			return true;
+		}
+		bool operator!=(const Scene& other) const {
+			return !(*this == other);
+		}
 
 	private:
 
+		std::vector<Ref<Entity>> mEntities;
 		entt::registry mRegistry;
-
-		glm::mat4 mView;
-		glm::mat4 mProjection;
 
 };

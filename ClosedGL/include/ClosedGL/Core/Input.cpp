@@ -3,7 +3,7 @@
 
 #include "ClosedGL/Core/Window.h"
 
-IInput* Input::pInput = nullptr;
+GLFWInput* Input::pInput = nullptr;
 
 bool GLFWInput::isKeyDown(Keys keyCode) const {
 	return glfwGetKey(pWindow->native(), keyCode) == GLFW_PRESS;

@@ -6,9 +6,10 @@
 
 #include "ClosedGL/Core/Input.h"
 
+#include "ClosedGL/Renderer/RenderCommands.h"
 #include "ClosedGL/Renderer/Renderer2D.h"
 
-#include "ClosedGL/Layers/StatsLayer.h"
+#include "ClosedGL/Core/Managers/TextureManager.h"
 
 static void MessageCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar * message, const void* userParam) {
 	if (severity != GL_DEBUG_SEVERITY_NOTIFICATION)
@@ -25,12 +26,10 @@ Application* Application::sInstance = nullptr;
 Timestep Time::delta = 0;
 
 
-Application::Application(Window* window): pWindow(window) {
+Application::Application(Window* window): pWindow(window), mWorld({ 0.0f, -10.0f }) {
 
 	sInstance = this;
 	
-	pWindow->init();
-
 }
 
 void Application::init() {
@@ -46,6 +45,9 @@ void Application::init() {
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
+	// Create first white texture
+	mTextureManager.create(std::nullopt);
+
 	Renderer2D::init();
 
 }
@@ -53,10 +55,10 @@ void Application::init() {
 void Application::run() {
 
 	mRunning = true;
-	Clock clock;
-	Timestep accumulator = 0;
+	Time::Clock clock;
+	Timestep accumulator = 0.0;
 
-	Stats::updates = 1 / clock.tickInterval() + 1;
+	Stats::updates = (uint32_t) (1 / clock.tickInterval() + 1);
 
 	while (mRunning) {
 
@@ -71,7 +73,7 @@ void Application::run() {
 			accumulator -= clock.tickInterval();
 		}
 
-		mWorld.update(ts, 1, 1);
+		//mWorld.Step(ts, 1, 1);
 		render(ts);
 
 	}
@@ -79,10 +81,11 @@ void Application::run() {
 }
 
 void Application::render(Timestep ts) {
-	Renderer2D::clear();
+	RenderCommands::clear();
+
 	Renderer2D::beginScene(mCamera);
 	mCamera.update(ts);
-	mScene.update(ts);
+	mSceneManager.updateCurrentScene(ts);
 	Renderer2D::endScene();
 
 	notify();

@@ -13,7 +13,7 @@ class View: public Observer, public Subject {
 
 	public:
 
-		View(Application* model);
+		View(Ref<Application> model);
 		~View() {
 			destroy();
 			delete pStatsLayer;
@@ -21,11 +21,7 @@ class View: public Observer, public Subject {
 		
 		virtual void update() override;
 		
-		virtual void notify() override {
-			std::for_each(std::begin(mObservers), std::end(mObservers), [](Observer* const observer) {
-				observer->update();
-			});
-		}
+		NOTIFY
 
 		void init();
 		void destroy();
@@ -33,8 +29,6 @@ class View: public Observer, public Subject {
 		void end();
 
 	private:
-
-		Application* mModel;
 
 		StatsLayer* pStatsLayer { new StatsLayer };
 		

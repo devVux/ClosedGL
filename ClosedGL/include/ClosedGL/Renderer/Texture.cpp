@@ -10,7 +10,7 @@ Texture::~Texture() {
 
 void Texture::setData(void* data) {
 	glBindTexture(GL_TEXTURE_2D, mTextureID);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, mWidth, mHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, mCoords.width, mCoords.height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
 	glBindTexture(GL_TEXTURE_2D, 0);
 }
 
@@ -18,19 +18,15 @@ void Texture::load(const std::string& path) {
 
 	glBindTexture(GL_TEXTURE_2D, mTextureID);
 
-	mLocalBuffer = stbi_load(path.c_str(), &mWidth, &mHeight, &mBitsPerPixel, 4);
+	mLocalBuffer = stbi_load(path.c_str(), &mCoords.width, &mCoords.height, &mBitsPerPixel, 4);
 
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, mWidth, mHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, mLocalBuffer);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, mCoords.width, mCoords.height, 0, GL_RGBA, GL_UNSIGNED_BYTE, mLocalBuffer);
 
 	if (mLocalBuffer)
 		stbi_image_free(mLocalBuffer);
 
 	glBindTexture(GL_TEXTURE_2D, 0);
 
-}
-
-SubTexture Texture::cutOut(Coords coords) {
-	return SubTexture(this, coords);
 }
 
 //std::vector<SubTexture> Texture::cutOut(const std::initializer_list<Coords>& coords) {
@@ -57,12 +53,4 @@ void Texture::init() {
 	glBindTexture(GL_TEXTURE_2D, 0);
 
 }
-
-
-
-bool operator==(const Texture& left, const Texture& right) { return left.mTextureID == right.mTextureID; }
-bool operator!=(const Texture& left, const Texture& right) { return !(left == right); }
-
-
-
 

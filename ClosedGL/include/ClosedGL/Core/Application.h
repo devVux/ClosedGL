@@ -3,13 +3,17 @@
 #include "Window.h"
 #include "ClosedGL/Events/Event.h"
 
-#include "ClosedGL/Renderer/Renderer.h"
-#include "ClosedGL/Scene/Scene.h"
+#include "ClosedGL/Core/Managers/SceneManager.h"
+#include "ClosedGL/Core/Managers/TextureManager.h"
 
-#include <Physiks/World.h>
+#include "ClosedGL/Scene/OrthographicCamera.h"
+#include "ClosedGL/Scene/PerspectiveCamera.h"
+
+#include <box2d/b2_world.h>
 
 #include "ClosedGL/Utils/Observer.h"
 #include <algorithm>
+
 
 class Application: public EventListener, public Subject {
 
@@ -43,28 +47,25 @@ class Application: public EventListener, public Subject {
 		void onEvent(Event& e) override;
 
 
-		virtual void notify() override {
-			std::for_each(std::begin(mObservers), std::end(mObservers), [](Observer* observer) {
-				observer->update();
-			});
-		}
+		NOTIFY
 
 		GLFWwindow* nativeWindow() const { return pWindow->native(); }
 
 	private:
 
+
 		Window* pWindow;
 		EventDispatcher mDispatcher;
 
-		Scene mScene;
-		
 		bool mRunning { false };
 	
 	protected:
 
-		World mWorld;
+		b2World mWorld;
 		OrthographicCamera mCamera;
 	
+		SceneManager mSceneManager;
+		TextureManager mTextureManager;
 
 	private:
 

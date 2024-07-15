@@ -6,15 +6,23 @@
 #include "ClosedGL/Events/MouseEvents.h"
 #include "ClosedGL/Core/Window.h"
 
-class GLFWWindow;
 
-class IInput {
+class GLFWInput {
 
 	public:
 
-		virtual bool isKeyDown(Keys keyCode) const = 0;
-		virtual bool isMouseButtonDown(MouseButtons button) const = 0;
-		virtual MouseCoord mousePos() const = 0;
+		GLFWInput(Window* window): pWindow(window) { }
+
+		virtual bool isKeyDown(Keys keyCode) const;
+
+		virtual bool isMouseButtonDown(MouseButtons button) const;
+
+		virtual MouseCoord mousePos() const;
+
+
+	private:
+
+		Window* pWindow;
 
 };
 
@@ -35,33 +43,14 @@ class Input {
 			return pInput->mousePos();
 		}
 
-		static void setInputMode(IInput* input) {
+		static void setInput(GLFWInput* input) {
 			if (input != nullptr)
 				pInput = input;
 		}
 
 	private:
 
-		static IInput* pInput;
+		static GLFWInput* pInput;
 
 };
 
-
-
-class GLFWInput: public IInput {
-
-	public:
-
-		GLFWInput(Window* window): pWindow(window) { }
-
-		virtual bool isKeyDown(Keys keyCode) const;
-
-		virtual bool isMouseButtonDown(MouseButtons button) const;
-
-		virtual MouseCoord mousePos() const;
-
-	private:
-
-		Window* pWindow;
-
-};

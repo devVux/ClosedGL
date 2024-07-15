@@ -42,7 +42,7 @@ void Window::init() {
 
 	glfwSetWindowCloseCallback(pWindow, [](GLFWwindow* window) {
 		const auto& eventHandler = (EventHandler*) glfwGetWindowUserPointer(window);
-		eventHandler->push(new WindowCloseEvent);
+		eventHandler->push(std::make_shared<WindowCloseEvent>());
 	});
 
 	glfwSetWindowSizeCallback(pWindow, [](GLFWwindow* window, int w, int h) {
@@ -59,17 +59,17 @@ void Window::init() {
 
 			case GLFW_PRESS:
 
-				eventHandler->push(new KeyPressedEvent(keyCode));
+				eventHandler->push(std::make_shared<KeyPressedEvent>(keyCode));
 				break;
 
 			case GLFW_RELEASE:
 
-				eventHandler->push(new KeyReleasedEvent(keyCode));
+				eventHandler->push(std::make_shared<KeyReleasedEvent>(keyCode));
 				break;
 
 			case GLFW_REPEAT:
 
-				eventHandler->push(new KeyTypedEvent(keyCode, 1));
+				eventHandler->push(std::make_shared<KeyTypedEvent>(keyCode, 1));
 				break;
 
 		}
@@ -83,11 +83,11 @@ void Window::init() {
 		switch (action) {
 
 			case GLFW_PRESS:
-				eventHandler->push(new MouseButtonPressedEvent(button));
+				eventHandler->push(std::make_shared<MouseButtonPressedEvent>(button));
 				break;
 
 			case GLFW_RELEASE:
-				eventHandler->push(new MouseButtonReleasedEvent(button));
+				eventHandler->push(std::make_shared<MouseButtonReleasedEvent>(button));
 				break;
 
 		}
@@ -97,14 +97,14 @@ void Window::init() {
 	glfwSetCursorPosCallback(pWindow, [](GLFWwindow* window, double x, double y) {
 
 		const auto& eventHandler = (EventHandler*) glfwGetWindowUserPointer(window);
-		eventHandler->push(new MouseMovedEvent({ (float) x, (float) y }));
+		eventHandler->push(std::make_shared<MouseMovedEvent>(MouseCoord((float) x, (float) y)));
 
 	});
 
 	glfwSetScrollCallback(pWindow, [](GLFWwindow* window, double xOffset, double yOffset) {
 
 		const auto& eventHandler = (EventHandler*) glfwGetWindowUserPointer(window);
-		eventHandler->push(new MouseScrolledEvent((float) xOffset, (float) yOffset));
+		eventHandler->push(std::make_shared<MouseScrolledEvent>((float) xOffset, (float) yOffset));
 
 	});
 

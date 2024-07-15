@@ -10,62 +10,71 @@
 
 #include "ClosedGL/Renderer/Texture.h"
 
+
 namespace Renderer2D {
 
-	struct Stats {
-		static uint32_t drawCalls;
-		static uint32_t polyCount;
+	inline constexpr int INDICES_PER_QUAD = 6;
+	inline constexpr int BATCH_CAPACITY = 10;
+	inline constexpr int BATCH_INDICES = BATCH_CAPACITY * INDICES_PER_QUAD;
 
-		static void reset() {
-			drawCalls = 0;
-			polyCount = 0;
+
+	struct Quad {
+
+		static constexpr int stride = 2 + 3;
+		std::array<float, 4 * stride> points;
+
+		Quad() {
+			points.fill(0);
 		}
 
-	};
-
-	static constexpr unsigned int layoutSize = 8 + 12 + 8;	// pos + color + textCoord
-	static constexpr int BATCH_CAPACITY = 10;
-	static constexpr int BATCH_INDICES = BATCH_CAPACITY * 6;
-	static constexpr int BATCH_DATA = BATCH_CAPACITY * layoutSize;
-
-	struct Polygon {
-		float* data;
-		uint32_t vertices;
-		uint32_t count;
-
-		Polygon(std::initializer_list<std::initializer_list<float>> v): vertices((uint32_t) v.size()), count((uint32_t) (v.size() * v.begin()->size())) {
-			if (v.size() < 3)
-				throw std::invalid_argument("Initializer list must contain at least 3 vertices.");
-
-			data = new float[count];
-
-			size_t i = 0;
-			for (const auto it : v)
-				for (const auto it2 : it)
-					data[i++] = it2;
-
+		Quad& setColor(glm::vec3 color) {
+			setEvery(color, COLOR_POS);
+			return *this;
+		}
+		Quad& setPosition(const std::initializer_list<glm::vec2>& positions) {
+			if (positions.size() != 4)
+				return *this;
+			setEvery(*(positions.begin() + 0), COORDINATES_POS + 0 * stride, 1);
+			setEvery(*(positions.begin() + 1), COORDINATES_POS + 1 * stride, 1);
+			setEvery(*(positions.begin() + 2), COORDINATES_POS + 2 * stride, 1);
+			setEvery(*(positions.begin() + 3), COORDINATES_POS + 3 * stride, 1);
+			return *this;												   
 		}
 
-		~Polygon() {
-			delete[] data;
-		}
+		float* data() { return points.data(); }
+		constexpr uint32_t count() const { return static_cast<uint32_t>(points.size()); }
+		constexpr uint32_t size() const { return static_cast<uint32_t>(points.size() * sizeof(float)); }
+
+		private:
+
+			static constexpr uint32_t COORDINATES_POS = 0;
+			static constexpr uint32_t COLOR_POS = 2;
+
+
+			template <typename T>
+			requires requires(T t) { { t.length() } -> std::same_as<int>; }
+			void setEvery(const T& val, const uint32_t pos, int times = 4) {
+				for (int i = 0; i < times; ++i)
+					for (int j = 0; j < val.length(); ++j)
+						if (pos + j < points.size()) {
+							uint32_t row = i * stride;
+							uint32_t col = pos + j;
+							points[row + col] = val[j];
+						}
+			}
 
 	};
 
 
 	void init();
 	
-	void insert(const Polygon& p);
-
-	void clear(float r = 0.2f, float g = 0.2f, float b = 0.2f);
+	void insert(const Quad& q);
 
 
 	void beginScene(const OrthographicCamera& camera);
 	void endScene();
 
 	void drawQuad(glm::vec2 position, glm::vec2 size, glm::vec3 color = glm::vec3(1.0f));
-	void drawQuad(const glm::mat4& transform, const glm::vec3& color = glm::vec3(1.0f));
-	void drawQuad(const glm::mat4& transform, const Texture& texture, const Coords& coords, const glm::vec3& color = glm::vec3(1.0f));
 	void draw();
 
 };

@@ -29,14 +29,14 @@ class BufferLayout {
 			mStride += count * VertexBufferElement::size(type);
 		}
 
-		//unsigned int size() const { return mStride * mElements.size(); }
+		size_t size() const { return mStride * mElements.size(); }
 		
-		unsigned int stride() const { return mStride; }
+		uint32_t stride() const { return mStride; }
 		const std::vector<VertexBufferElement>& elements() const { return mElements; }
 
 	private:
 
-		unsigned int mStride { 0 };
+		uint32_t mStride { 0 };
 		std::vector<VertexBufferElement> mElements;
 
 };
@@ -52,8 +52,8 @@ class VertexBuffer {
 		void bind() const;
 		void unbind() const;
 
-		void push(float* vertices, unsigned int size, GLenum mode = GL_STATIC_DRAW) const;
-		void insert(float* vertices, unsigned int offset, unsigned int size) const;
+		void push(const float* vertices, unsigned int size, GLenum mode = GL_STATIC_DRAW) const;
+		void insert(const float* vertices, unsigned int offset, unsigned int size) const;
 		
 		void setLayout(const BufferLayout& layout) { mLayout = layout; }
 		BufferLayout layout() const { return mLayout; }
@@ -73,14 +73,13 @@ class IndexBuffer {
 	public:
 
 		IndexBuffer();
-		//IndexBuffer(const IndexBuffer& other);
 		~IndexBuffer();
 
 		void bind() const;
 		void unbind() const;
 
-		void push(unsigned int* indices, unsigned int size, GLenum mode = GL_STATIC_DRAW);
-		void insert(unsigned int* indices, unsigned int offset, unsigned int size);
+		void push(const unsigned int* indices, unsigned int size, GLenum mode = GL_STATIC_DRAW);
+		void insert(const unsigned int* indices, unsigned int offset, unsigned int size);
 	
 		unsigned int count() const { return mCount; }
 		#ifdef _DEBUG
@@ -126,6 +125,6 @@ class VertexArray {
 
 		ID mArrayId;
 
-		IndexBuffer* mIndexBuffer;
+		IndexBuffer* mIndexBuffer { 0 };
 
 };

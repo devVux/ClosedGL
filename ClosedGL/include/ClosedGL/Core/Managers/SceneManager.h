@@ -1,44 +1,38 @@
 #pragma once
 
+#include "ClosedGL/Scene/Scene.h"
 #include <entt/entt.hpp>
-#include "ClosedGL/Scene/Entity.h"
+
 
 class SceneManager {
 
 	public:
 
-		~SceneManager() {
-			while (!mEntities.empty()) {
-				delete mEntities.back();
-				mEntities.pop_back();
-			}
+		void addScene(Ref<Scene> scene) {
+			mScenes.push_back(scene);
 		}
 
-		static Entity& createEntity() {
-			Entity* e = new Entity(mRegistry, mRegistry.create());
-			mEntities.emplace_back(e);
-			return *e;
+		void updateCurrentScene(Timestep ts) const { mScenes[mCurrentScene]->update(ts); }
+		Scene& currentScene() const { return *mScenes[mCurrentScene]; }
+		bool isEmpty() const { return mScenes.empty(); }
+		size_t sceneCount() const { return mScenes.size(); }
+
+		void nextScene() {
+			mCurrentScene = (mCurrentScene + 1) % mScenes.size();
+		}
+		void prevScene() {
+			mCurrentScene = std::min(mCurrentScene - 1, static_cast<uint32_t>(mScenes.size() - 1));
 		}
 
-		template <class T>
-		static T get(const Entity& entity) {
-			return mRegistry.try_get<T>((entt::entity) entity.entityID());
-		}
-
-		template <class T, class ...U>
-		static T group() {
-			return mRegistry.group<T, U...>();
-		}
-
-		template <class T, class ...U>
-		static auto view() {
-			return mRegistry.view<T, U...>();
+		void goToScene(uint32_t index) {
+			if (index < mScenes.size())
+				mCurrentScene = index;
 		}
 
 
 	private:
 
-		static std::vector<Entity*> mEntities;
-		static entt::registry mRegistry;
+		std::vector<Ref<Scene>> mScenes;
+		uint32_t mCurrentScene { 0 };
 
 };

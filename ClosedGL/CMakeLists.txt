@@ -19,8 +19,10 @@ find_package(glfw3 REQUIRED)
 find_package(glm REQUIRED)
 find_package(EnTT REQUIRED)
 find_package(stb REQUIRED)
+find_package(box2d REQUIRED)
 
 enable_testing()
+add_subdirectory("test")
 include_directories(
 	"${CMAKE_SOURCE_DIR}/vendor/Physiks/include"
 	"${CMAKE_SOURCE_DIR}/vendor/imgui"
@@ -48,7 +50,7 @@ set(SOURCES
 	"include/ClosedGL/Core/Window.cpp"
 	"include/ClosedGL/Core/Input.cpp"
 
-	"include/ClosedGL/Core/Managers/Managers.cpp"
+	"include/ClosedGL/Core/Managers/Texturemanager.cpp"
 
 	"include/ClosedGL/Layers/LayerStack.cpp"
 
@@ -58,6 +60,7 @@ set(SOURCES
 
 	"include/ClosedGL/Renderer/Buffer.cpp"
 	"include/ClosedGL/Renderer/Renderer2D.cpp"
+	"include/ClosedGL/Renderer/RenderCommands.cpp"
 	"include/ClosedGL/Renderer/Shader.cpp"
 	"include/ClosedGL/Renderer/Texture.cpp"
 
@@ -96,6 +99,7 @@ target_link_libraries(${STATICLIB} PUBLIC ImGui)
 target_link_libraries(${STATICLIB} PUBLIC EnTT::EnTT)
 target_link_libraries(${STATICLIB} PRIVATE PhysiksStatic) 
 target_link_libraries(${STATICLIB} PRIVATE GTest::gtest_main)
+target_link_libraries(${STATICLIB} PRIVATE box2d::box2d)
 
 add_executable(${PROJECT_NAME} ${SOURCES})
 target_link_libraries(${PROJECT_NAME} PUBLIC ${STATICLIB})
