@@ -1,32 +1,12 @@
 #pragma once
 
-class Texture;
-
-class SubTexture {
-		
-	public:
-	
-		SubTexture() = default;
-		SubTexture(Texture* texture, const Coords& coords): pTexture(texture), mCoords(coords) { }
-	
-		Texture* texture() const { return pTexture; }
-
-		Coords coords() const { return mCoords; }
-
-
-	private:
-
-		Texture* pTexture;
-		Coords mCoords;
-
-};
 
 class Texture {
 
 	public:
 
-		Texture(size_t index, uint32_t width = 1, uint32_t height = 1): 
-			mIndex(index), mWidth(width), mHeight(height) { }
+		Texture(uint32_t index, int width = 1, int height = 1): 
+			mIndex(static_cast<float>(index)), mCoords {0, 0, width, height} { }
 		~Texture();
 
 		void init();
@@ -34,32 +14,30 @@ class Texture {
 		void setData(void* data);
 		void load(const std::string& path);
 
-		SubTexture cutOut(Coords coords);
-		std::vector<SubTexture> cutOut(const std::initializer_list<Coords>& coords);
+		//Texture cutOut(Coords coords);
+		//std::vector<SubTexture> cutOut(const std::initializer_list<Coords>& coords);
 		
-		friend bool operator==(const Texture& left, const Texture& right);
-		friend bool operator!=(const Texture& left, const Texture& right);
-
 		float index() const { return mIndex; }
 		void setHandle(uint64_t handle) { mHandle = handle; }
 		uint64_t handle() const { return mHandle; }
 		uint32_t id() const { return mTextureID; }
 
-		float width() const { return (float) mWidth; }
-		float height() const { return (float) mHeight; }
+		int width() const { return mCoords.width; }
+		int height() const { return mCoords.height; }
+
+		bool operator<=>(const Texture& other) const { return mTextureID == other.mTextureID && mIndex == other.mIndex; }
 
 
 	private:
 
-		unsigned int mTextureID;
-		uint64_t mHandle;
+		uint32_t mTextureID { 0 };
+		uint64_t mHandle { 0 };
 		float mIndex;
 
-		int mWidth { 1 };
-		int mHeight { 1 };
-		int mBitsPerPixel;
+		Coords<int> mCoords;
+		int mBitsPerPixel { 3 };
 
-		unsigned char* mLocalBuffer;
+		unsigned char* mLocalBuffer { nullptr };
 
 };
 

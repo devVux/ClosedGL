@@ -17,30 +17,30 @@ int main() {
 	std::thread t([&eventHandler]() {
 		eventHandler.run();
 	});
+	t.detach();
+
 
 	Window window(&eventHandler);
+	window.init();
 
-	GLFWInput* input = new GLFWInput(&window);
-	Input::setInputMode(input);
+	GLFWInput input(&window);
+	Input::setInput(&input);
 
-	auto app = ClosedGL::create(&window);
-	TextureManager::create({});
 
-	View* view = new View(app);
-	view->init();
-	Controller* controller = new Controller(app, view);
-	eventHandler.registerListener(app);
+
+	auto app = Ref<Application>(ClosedGL::create(&window));
 	app->init();
+
+	
+	eventHandler.registerListener(app);
+	
+	View view(app);
+	view.init();
+
 
 	app->run();
 
-	eventHandler.stop();
-	t.detach();
 	
-	delete app;
-	delete view;
-	delete controller;
-	delete input;
 
 	return 0;
 }

@@ -16,6 +16,9 @@
 #include "ClosedGL/Core/Managers/TextureManager.h"
 #include "ClosedGL/Core/Window.h"
 
+#include <box2d/b2_body.h>
+#include <box2d/b2_polygon_shape.h>
+
 static std::random_device dev;
 static std::mt19937 rng(dev());
 static std::uniform_real_distribution<float> color(0.0f, 1.0f);
@@ -26,34 +29,27 @@ class Sandbox: public Application {
 
 	public:
 		
-		std::vector<SubTexture> subs;
-
 		Sandbox(Window* window): Application(window) {
 
-			Entity& e = SceneManager::createEntity();
-			Body* body = mWorld.createBody();
+			Ref<Scene> scene = std::make_shared<Scene>();
+			Ref<Entity> e = scene->createEntity();
 
-			e.addComponent<PhysicsComponent>(body, &e);
-			e.addComponent<TransformComponent>(glm::mat4(2.0f));
-			e.addComponent<SpriteComponent>(glm::vec3(0.0f));
+			{
+				b2BodyDef groundBodyDef;
+				groundBodyDef.position.Set(0.0f, -10.0f);
 
-			Texture& texture = TextureManager::create("F:\\dev\\ClosedGL\\ClosedGL\\assets\\sprites\\Minecraft\\wood.png");
-			e.addComponent<MeshComponent>(&texture);
+				b2Body* groundBody = mWorld.CreateBody(&groundBodyDef);
+				b2PolygonShape groundBox;
+				groundBox.SetAsBox(50.0f, 10.0f);
 
-			Entity& e2 = SceneManager::createEntity();
-			Body* body2 = mWorld.createBody();
-			body2->setPosition({ 10, 5 });
-			e2.addComponent<PhysicsComponent>(body2, &e2);
-			e2.addComponent<TransformComponent>(glm::mat4(1.0f));
-			e2.addComponent<SpriteComponent>(glm::vec3(0.0f));
+				groundBody->CreateFixture(&groundBox, 0.0f);
 
-			Texture& texture2 = TextureManager::create("F:\\dev\\ClosedGL\\ClosedGL\\assets\\sprites\\Chayed's Free Pixels\\Game Boy\\Gameboy Tileset.png");
-			//SubTexture& sub2 = TextureManager::crop(texture2, { 0, 172, 16, 16 });
-			subs = TextureManager::crop(texture2, { 
-				{ 0, 172, 16, 16 },
-				{ 0, 160, 16, 16 },
-			});
-			e2.addComponent<MeshComponent>(&subs[1]);
+				e->addComponent<PhysicsComponent>(groundBody);
+				e->addComponent<TransformComponent>(glm::mat4(2.0f));
+				e->addComponent<SpriteComponent>(glm::vec3(0.0f));
+			}
+
+			mSceneManager.addScene(scene);
 
 		}
 

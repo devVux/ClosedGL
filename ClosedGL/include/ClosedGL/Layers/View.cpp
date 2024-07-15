@@ -7,7 +7,7 @@
 #include "backends/imgui_impl_glfw.h"
 #include "backends/imgui_impl_opengl3.h"
 
-View::View(Application* model): mModel(model) {
+View::View(Ref<Application> model) {
 	model->registerObserver(this);
 	pStatsLayer->registerObserver(this);
 }

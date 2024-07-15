@@ -21,12 +21,12 @@ void VertexBuffer::unbind() const {
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
-void VertexBuffer::push(float* vertices, unsigned int size, GLenum mode) const {
+void VertexBuffer::push(const float* vertices, unsigned int size, GLenum mode) const {
 	glBindBuffer(GL_ARRAY_BUFFER, mBufferId);
 	glBufferData(GL_ARRAY_BUFFER, size, vertices, mode);
 }
 
-void VertexBuffer::insert(float* vertices, unsigned int offset, unsigned int size) const {
+void VertexBuffer::insert(const float* vertices, unsigned int offset, unsigned int size) const {
 	glBindBuffer(GL_ARRAY_BUFFER, mBufferId);
 	glBufferSubData(GL_ARRAY_BUFFER, offset, size, vertices);
 }
@@ -38,10 +38,6 @@ void VertexBuffer::insert(float* vertices, unsigned int offset, unsigned int siz
 IndexBuffer::IndexBuffer() {
 	glCreateBuffers(1, &mBufferId);
 }
-
-//IndexBuffer::IndexBuffer(const IndexBuffer& other): mBufferId(other.mBufferId), mCount(other.mCount) {
-//
-//}
 
 IndexBuffer::~IndexBuffer() {
 	glDeleteBuffers(1, &mBufferId);
@@ -58,12 +54,12 @@ void IndexBuffer::unbind() const {
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 }
 
-void IndexBuffer::insert(unsigned int* indices, unsigned int offset, unsigned int size) {
+void IndexBuffer::insert(const unsigned int* indices, unsigned int offset, unsigned int size) {
 	glBindBuffer(GL_ARRAY_BUFFER, mBufferId);
 	glBufferSubData(GL_ARRAY_BUFFER, offset, size, indices);
 }
 
-void IndexBuffer::push(unsigned int* indices, unsigned int size, GLenum mode) {
+void IndexBuffer::push(const unsigned int* indices, unsigned int size, GLenum mode) {
 	mCount = size / sizeof(GLuint);
 	#ifdef _DEBUG
 		pData = new unsigned int[mCount];
@@ -99,8 +95,8 @@ void VertexArray::addBuffer(const VertexBuffer& vertexBuffer) {
 
 	vertexBuffer.bind();
 
-	unsigned int offset = 0;
-	for (size_t i = 0; i < layout.elements().size(); i++) {
+	uint64_t offset = 0;
+	for (GLuint i = 0; i < layout.elements().size(); i++) {
 		const VertexBufferElement& element = layout.elements().at(i);
 		glVertexAttribPointer(i, element.count, element.type, GL_FALSE, layout.stride(), (void*) offset);
 		glEnableVertexAttribArray(i);

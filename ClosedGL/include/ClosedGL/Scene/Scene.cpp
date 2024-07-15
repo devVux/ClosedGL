@@ -2,37 +2,24 @@
 #include "Scene.h"
 
 #include "ClosedGL/Renderer/Renderer2D.h"
-#include "Physiks/Body.h"
 
-#include "ClosedGL/Core/Managers/SceneManager.h"
 
-void Scene::update(Timestep ts) {
+void Scene::update(Timestep ts) const {
 
-	const auto& group = SceneManager::view<PhysicsComponent, TransformComponent, SpriteComponent, MeshComponent>();
+	const auto& group = mRegistry.view<PhysicsComponent, TransformComponent, SpriteComponent>();
 
 	for (auto entity : group) {
 
 		auto& p = group.get<PhysicsComponent>(entity);
 		auto& t = group.get<TransformComponent>(entity);
 		auto& s = group.get<SpriteComponent>(entity);
-		auto& m = group.get<MeshComponent>(entity);
 
 		auto& b = p.body;
 
-		t.setPosition(glm::vec2(b->position().x, b->position().y));
-
-		Renderer2D::drawQuad(t.transform, *m.texture, m.coords);
+		//Renderer2D::drawQuad(t.transform, s.color);
 
 	}
 
-	const auto& view = SceneManager::view<MotionComponent>();
-
-	for (auto entity : view) {
-
-		auto& m = view.get<MotionComponent>(entity);
-
-		m.move(ts);
-
-	}
+	Renderer2D::drawQuad({ -1.0f, 0.0f }, { 10.0f, 10.0f }, { 0.2f, 0.5f, 0.7f });
 
 }

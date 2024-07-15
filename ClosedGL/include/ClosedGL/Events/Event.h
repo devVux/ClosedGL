@@ -14,7 +14,7 @@ enum class EventType {
 #define EVENT_TYPE(x)	static EventType staticType() { return EventType::x; } \
 						virtual std::string name() const override { return #x; } \
 						virtual EventType type() const { return EventType::x; }
-#define NOTIFY_ALL() virtual void notifyAll() { for (EventListener* listener : mListeners) listener->onEvent(*this); }
+#define NOTIFY_ALL() virtual void notifyAll() { for (auto listener : mListeners) if (!listener.expired()) listener.lock()->onEvent(*this); }
 
 class Event;
 
@@ -46,7 +46,7 @@ class Event {
 
 	protected:
 
-		std::vector<EventListener*> mListeners;
+		std::vector<std::weak_ptr<EventListener>> mListeners;
 
 
 	private:
@@ -59,13 +59,10 @@ class EventDispatcher {
 
 	public:
 
-		/*
-		@param callback: deve accettare come parametro T&
-		*/
 		template <class T, class F>
-		static void staticDispatch(Event& e, const F& callback) {
+		static void staticDispatch(Event& e, const F&& callback) {
 			
-			if (dynamic_cast<T*>(&e) != nullptr) {
+			if (e.type() == T::staticType()) {
 				e.reject();
 				callback(static_cast<T&>(e));
 			}
@@ -74,9 +71,8 @@ class EventDispatcher {
 		
 		template <class T, class F>
 		void dispatch(Event& e, const F&& callback) {
-
 			
-			if (dynamic_cast<T*>(&e) != nullptr) {
+			if (e.type() == T::staticType()) {
 				e.reject();
 				callback(static_cast<T&>(e));
 			}
@@ -90,51 +86,61 @@ class EventHandler {
 	public:
 
 		~EventHandler() {
-			std::lock_guard guard(mMutex);
-			while (!mEventQueue.empty()) {
-				delete mEventQueue.back();
-				mEventQueue.pop();
-			}
+			stop();
 		}
 
 		void run() {
-			mRunning = true;
-			while (mRunning) {
-				mMutex.lock();
+			mRunning.store(true);
+			while (mRunning.load()) {
+				
+				{
+					// When you sleep after acquiring the lock, 
+					// the thread will hold the lock during the sleep period.
+					// This is why we scope the mutex block of code.
 
-				if (!mEventQueue.empty()) {
-					Event* e = mEventQueue.front();
-					for (auto& listener : mListeners)
-						listener->onEvent(*e);
+					std::lock_guard<std::mutex> lock(mMutex);
 
-					delete e;
-					mEventQueue.pop();
+					if (!mEventQueue.empty()) {
+						std::shared_ptr<Event> e = mEventQueue.front();
+						mEventQueue.pop();
+
+						for (auto it = mListeners.begin(); it != mListeners.end(); ) {
+							if (auto listener = it->lock()) {
+								listener->onEvent(*e);
+								++it;
+							} else
+								it = mListeners.erase(it);  // Remove expired listeners
+						}
+					}
 				}
-				mMutex.unlock();
-				//std::this_thread::sleep_for(std::chrono::milliseconds(50));
+
+				std::this_thread::sleep_for(std::chrono::milliseconds(1));
+
 			}
 		}
+
 		void stop() {
-			std::lock_guard<std::mutex> lock(mMutex);
-			mRunning = false;
+			mRunning.store(false);
 		}
 
-		void push(Event* e) {
+		void push(std::shared_ptr<Event> e) {
 			std::lock_guard<std::mutex> lock(mMutex);
 			mEventQueue.push(e);
 		}
 
-		void registerListener(EventListener* listener) {
-			mListeners.insert(mListeners.begin(), listener);
+		void registerListener(std::weak_ptr<EventListener> listener) {
+			std::lock_guard<std::mutex> lock(mMutex);
+			mListeners.push_back(std::move(listener));
 		}
+
 
 	private:
 
-		std::queue<Event*> mEventQueue;
-		std::vector<EventListener*> mListeners;
+		std::queue<std::shared_ptr<Event>> mEventQueue;
+		std::vector<std::weak_ptr<EventListener>> mListeners;
 
-		mutable std::mutex mMutex;
+		std::mutex mMutex;
 
-		bool mRunning;
+		std::atomic<bool> mRunning { false };
 
 };
