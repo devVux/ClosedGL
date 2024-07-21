@@ -16,6 +16,23 @@
 				"lhs": "${hostSystemName}",
 				"rhs": "Windows"
 			}
+		},
+		{
+			"name": "macOS-base",
+			"generator": "Ninja",
+			"binaryDir": "${sourceDir}/out/build/${presetName}",
+			"installDir": "${sourceDir}/out/install/${presetName}",
+			"cacheVariables": {
+				"CMAKE_OSX_ARCHITECTURES": "arm64",
+				"CMAKE_C_COMPILER": "clang",
+				"CMAKE_CXX_COMPILER": "clang++",
+				"CMAKE_TOOLCHAIN_FILE": "${sourceDir}/vcpkg/scripts/buildsystems/vcpkg.cmake"
+			},
+			"condition": {
+				"type": "equals",
+				"lhs": "${hostSystemName}",
+				"rhs": "Darwin"
+			}
 		}
 	],
 	"buildPresets": [
@@ -23,6 +40,11 @@
 			"name": "x64-debug",
 			"displayName": "x64 Debug",
 			"configurePreset": "windows-base",
+			"configuration": "Debug"
+		},
+		{
+			"name": "mac-debug",
+			"configurePreset": "macOS-base",
 			"configuration": "Debug"
 		},
 		{
